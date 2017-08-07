@@ -1,0 +1,13 @@
+*.e2e.ts
+*.spec.ts
+.editorconfig
+.vscode
+config
+.gitattributes
+.nvmrc
+.travis.yml
+karma.conf.js
+protractor.conf.js
+tsconfig.json
+tsconfig.webpack.json
+webpack.config.js

@@ -1,0 +1,14 @@
+<h1 tid="page-title">Prerender page</h1>
+<pre tid="observable-query-params-json">{{jsonParams}}</pre>
+<p>
+  <button tid="set-query-string" (click)="changeQueryString()">set query params</button>
+  <button tid="add-query-string" (click)="changeQueryString(true)">add query params</button>
+  <button tid="reset-query-string" (click)="resetQueryString()">re-set query params</button>
+  <button tid="set-array-query-string" (click)="setArrayParam()">set array params</button>
+  <button tid="set-valueless-query-string" (click)="setValuelessParam()">set valueless</button>
+  <button tid="set-query-string-replace-state" (click)="setQueryStringReplaceState()">set with replace state</button>
+  <button tid="null-query-string" (click)="nullQueryString()">remove value by passing null</button>
+  <button tid="navigate-and-set-query" (click)="navigateAndSetQuery()">navigate and set query at once</button>
+  <button tid="navigate-qs-quest" (click)="setQueryWithQuestions()">set query with questions</button>
+
+</p>
