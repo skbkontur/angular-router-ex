@@ -11,8 +11,6 @@
     "noEmitHelpers": true,
     "importHelpers": true,
     "strictNullChecks": false,
-    "declaration":true,
-    "declarationDir":"typings",
     "lib": [
       "dom",
       "es6"

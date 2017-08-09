@@ -12,7 +12,7 @@
         "strictNullChecks": false,
         "declaration": true,
         "rootDir":"router-ex",
-        "outDir":"typings",
+        "outDir":"compiled",
         "lib": [
             "dom",
             "es6"
@@ -23,6 +23,6 @@
     ],
     "angularCompilerOptions": {
         "skipTemplateCodegen": true,
-        "genDir": "typings"
+        "genDir": "compiled"
     }
 }

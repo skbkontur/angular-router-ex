@@ -48,8 +48,6 @@ npm-debug.log
 /src/*/dist/
 /dist/**
 /.awcache
-.webpack.json
-/compiled/
 dll/
 
 # Doc #
@@ -65,9 +63,5 @@ dll/
 *.css.shim.ts
 *.ngsummary.json
 *.shim.ngstyle.ts
-
-/typings/*.js
-/typings/**/*.js
-/typings/**/**/*.js
 
 
