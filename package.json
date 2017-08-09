@@ -1,6 +1,6 @@
 {
     "name": "angular-router-ex",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "An Angular 2+ Router, custom route urls, route caching",
     "keywords": [
         "angular2",
@@ -17,6 +17,8 @@
         "clean:dist": "npm run rimraf -- dist",
         "clean:install": "npm set progress=false && npm install",
         "clean": "npm cache clean && npm run rimraf -- node_modules doc coverage dist compiled dll",
+        "clean:ngc": "rimraf typings",
+        "ngcompile": "npm run clean:ngc && ngc -p ./tsconfig.aot.json",
         "e2e:travis": "npm-run-all -p -r server:prod:ci protractor:delay",
         "e2e": "npm-run-all -p -r server:prod:ci protractor",
         "github-deploy:dev": "webpack --config config/webpack.github-deploy.js --progress --profile --env.githubDev",
@@ -39,8 +41,8 @@
     },
     "peerDependencies": {
         "rxjs": "^5.0.1",
-        "@angular/core": "4.3.1",
-        "@angular/platform-browser": "4.3.1",
+        "@angular/core": ">=2.0.0",
+        "@angular/platform-browser": ">=2.0.0",
         "@angular/common": ">=2.0.0",
         "@angular/http": ">=2.0.0"
     },

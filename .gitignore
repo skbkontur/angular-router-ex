@@ -65,3 +65,9 @@ dll/
 *.css.shim.ts
 *.ngsummary.json
 *.shim.ngstyle.ts
+
+/typings/*.js
+/typings/**/*.js
+/typings/**/**/*.js
+
+

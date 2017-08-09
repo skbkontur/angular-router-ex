@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": false,
+        "noEmitHelpers": true,
+        "importHelpers": true,
+        "strictNullChecks": false,
+        "declaration": true,
+        "rootDir":"router-ex",
+        "outDir":"typings",
+        "lib": [
+            "dom",
+            "es6"
+        ]
+    },
+    "include": [
+        "router-ex"
+    ],
+    "angularCompilerOptions": {
+        "skipTemplateCodegen": true,
+        "genDir": "typings"
+    }
+}

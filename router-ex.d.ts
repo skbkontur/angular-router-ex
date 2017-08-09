@@ -1,1 +1,1 @@
-export * from "./typings/router-ex/"
+export * from "./typings/"
