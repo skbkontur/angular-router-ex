@@ -1,1 +1,1 @@
-export * from "./compiled/"
+export * from "./lib/"

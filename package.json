@@ -1,12 +1,13 @@
 {
     "name": "angular-router-ex",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "An Angular 2+ Router, custom route urls, route caching",
     "keywords": [
         "angular2",
         "typescript"
     ],
     "typings": "./router-ex.d.ts",
+    "main": ".lib/index.js",
     "license": "MIT",
     "scripts": {
         "build:dev": "npm run clean:dist && webpack --config config/webpack.dev.js --progress --profile",
@@ -17,7 +18,7 @@
         "clean:dist": "npm run rimraf -- dist",
         "clean:install": "npm set progress=false && npm install",
         "clean": "npm cache clean && npm run rimraf -- node_modules doc coverage dist compiled dll",
-        "clean:ngc": "rimraf compiled",
+        "clean:ngc": "rimraf lib",
         "ngcompile": "npm run clean:ngc && ngc -p ./tsconfig.aot.json",
         "e2e:travis": "npm-run-all -p -r server:prod:ci protractor:delay",
         "e2e": "npm-run-all -p -r server:prod:ci protractor",

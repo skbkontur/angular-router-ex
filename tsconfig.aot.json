@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "module": "commonjs",
+        "module": "es2015",
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
@@ -12,7 +12,7 @@
         "strictNullChecks": false,
         "declaration": true,
         "rootDir":"router-ex",
-        "outDir":"compiled",
+        "outDir":"lib",
         "lib": [
             "dom",
             "es6"
@@ -23,6 +23,6 @@
     ],
     "angularCompilerOptions": {
         "skipTemplateCodegen": true,
-        "genDir": "compiled"
+        "genDir": "lib"
     }
 }

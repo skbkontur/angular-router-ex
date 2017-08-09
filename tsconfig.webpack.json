@@ -34,10 +34,6 @@
     "forkChecker": true,
     "useWebpackText": true
   },
-  "angularCompilerOptions": {
-    "genDir": "./compiled",
-    "skipMetadataEmit": true
-  },
   "compileOnSave": false,
   "buildOnSave": false,
   "atom": {
