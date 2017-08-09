@@ -1,13 +1,13 @@
 {
     "name": "angular-router-ex",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "An Angular 2+ Router, custom route urls, route caching",
     "keywords": [
         "angular2",
         "typescript"
     ],
     "typings": "./router-ex.d.ts",
-    "main": ".lib/index.js",
+    "main": "./lib/index.js",
     "license": "MIT",
     "scripts": {
         "build:dev": "npm run clean:dist && webpack --config config/webpack.dev.js --progress --profile",
