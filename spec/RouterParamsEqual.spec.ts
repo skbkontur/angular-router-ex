@@ -1,5 +1,7 @@
-import {QueryParams} from "../router-ex/Config";
-import {isParamsEqual} from "../router-ex/IsParamsEqual";
+
+
+import {QueryParams} from "../src";
+import {isParamsEqual} from "../src/IsParamsEqual";
 
 describe(`Query params comparison`, () => {
 

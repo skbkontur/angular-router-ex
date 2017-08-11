@@ -1,5 +1,5 @@
 
-import {UrlParser} from "../router-ex/UrlParser";
+import {UrlParser} from "../src/UrlParser";
 describe(`UrlParser`, () => {
 
     it("should parse protocol", () => {

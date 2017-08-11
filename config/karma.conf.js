@@ -31,14 +31,14 @@ module.exports = function (config) {
      */
     files: [
       { pattern: './config/spec-bundle.js', watched: false },
-      { pattern: './src/assets/**/*', watched: false, included: false, served: true, nocache: false }
+      { pattern: './sample/assets/**/*', watched: false, included: false, served: true, nocache: false }
     ],
 
     /*
      * By default all assets are served at http://localhost:[PORT]/base/
      */
     proxies: {
-      "/assets/": "/base/src/assets/"
+      "/assets/": "/base/sample/assets/"
     },
 
     /*
@@ -67,7 +67,7 @@ module.exports = function (config) {
       noInfo: true,
       // and use stats to turn off verbose output
       stats: {
-        // options i.e. 
+        // options i.e.
         chunks: false
       }
     },

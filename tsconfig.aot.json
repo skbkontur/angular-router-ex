@@ -11,7 +11,7 @@
         "importHelpers": true,
         "strictNullChecks": false,
         "declaration": true,
-        "rootDir":"router-ex",
+        "rootDir":"src",
         "outDir":"lib",
         "lib": [
             "dom",
@@ -19,7 +19,7 @@
         ]
     },
     "include": [
-        "router-ex"
+        "src"
     ],
     "angularCompilerOptions": {
         "skipTemplateCodegen": true,

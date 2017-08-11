@@ -64,4 +64,6 @@ dll/
 *.ngsummary.json
 *.shim.ngstyle.ts
 
+/lib/
+
 

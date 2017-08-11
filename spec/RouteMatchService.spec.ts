@@ -1,5 +1,6 @@
-import {RouteMatchService} from "../router-ex/RouteMatchService";
-import {Routes} from "../router-ex/Config";
+
+import {Routes} from "../src/Config";
+import {RouteMatchService} from "../src/RouteMatchService";
 
 class Foo {
 

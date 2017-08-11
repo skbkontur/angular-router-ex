@@ -2,7 +2,6 @@
  * @author: @AngularClass
  */
 
-const webpack = require('webpack');
 const helpers = require('./helpers');
 
 /*
@@ -13,7 +12,6 @@ const AssetsPlugin = require('assets-webpack-plugin');
 const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
 const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const HtmlElementsPlugin = require('./html-elements-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -24,7 +22,6 @@ const ngcWebpack = require('ngc-webpack');
 /*
  * Webpack Constants
  */
-const HMR = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
   title: 'Angular2 Webpack Starter by @gdi2290 from @AngularClass',
@@ -58,9 +55,9 @@ module.exports = function (options) {
      */
     entry: {
 
-      'polyfills': './src/polyfills.browser.ts',
-      'main':      AOT ? './src/main.browser.aot.ts' :
-                  './src/main.browser.ts'
+      'polyfills': './sample/polyfills.browser.ts',
+      'main':      AOT ? './sample/main.browser.aot.ts' :
+                  './sample/main.browser.ts'
 
     },
 
@@ -79,7 +76,7 @@ module.exports = function (options) {
       extensions: ['.ts', '.js', '.json'],
 
       // An array of directory names to be resolved to the current directory
-      modules: [helpers.root('src'), helpers.root('node_modules')],
+      modules: [helpers.root('sample'), helpers.root('node_modules')],
 
     },
 
@@ -146,7 +143,7 @@ module.exports = function (options) {
         {
           test: /\.css$/,
           use: ['to-string-loader', 'css-loader'],
-          exclude: [helpers.root('src', 'styles')]
+          exclude: [helpers.root('sample', 'styles')]
         },
         /* Raw loader support for *.html
          * Returns file content as string
@@ -156,7 +153,7 @@ module.exports = function (options) {
         {
           test: /\.html$/,
           use: 'raw-loader',
-          exclude: [helpers.root('src/index.html')]
+          exclude: [helpers.root('sample/index.html')]
         },
 
         /* File loader for supporting images, for example, in CSS files.
@@ -221,8 +218,8 @@ module.exports = function (options) {
        */
       new ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows
-        /angular(\\|\/)core(\\|\/)src(\\|\/)linker/,
-        helpers.root('src'), // location of your src
+        /angular(\\|\/)core(\\|\/)sample(\\|\/)linker/,
+        helpers.root('sample'), // location of your src
         {
           // your Angular Async Route paths relative to this root directory
         }
@@ -238,7 +235,7 @@ module.exports = function (options) {
        * See: https://github.com/ampedandwired/html-webpack-plugin
        */
       new HtmlWebpackPlugin({
-        template: 'src/index.html',
+        template: 'sample/index.html',
         title: METADATA.title,
         chunksSortMode: 'dependency',
         metadata: METADATA,

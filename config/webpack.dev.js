@@ -101,7 +101,7 @@ module.exports = function (options) {
         {
           test: /\.css$/,
           use: ['style-loader', 'css-loader'],
-          include: [helpers.root('src', 'styles')]
+          include: [helpers.root('sample', 'styles')]
         },
 
       ]
@@ -122,11 +122,9 @@ module.exports = function (options) {
       // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
       new DefinePlugin({
         'ENV': JSON.stringify(METADATA.ENV),
-        'HMR': METADATA.HMR,
         'process.env': {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
-          'HMR': METADATA.HMR,
         }
       }),
 
@@ -174,13 +172,6 @@ module.exports = function (options) {
         { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('vendor')}`) }
       ]),
 
-      /**
-       * Plugin: NamedModulesPlugin (experimental)
-       * Description: Uses file names as module name.
-       *
-       * See: https://github.com/webpack/webpack/commit/a04ffb928365b19feb75087c63f13cadfc08e1eb
-       */
-      // new NamedModulesPlugin(),
 
       /**
        * Plugin LoaderOptionsPlugin (experimental)

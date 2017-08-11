@@ -1,5 +1,6 @@
-import {QueryStringParser} from "../router-ex/QueryStringParser";
-import {QueryParams} from "../router-ex/Config";
+import {QueryStringParser} from "../src/QueryStringParser";
+import {QueryParams} from "../src/Config";
+
 describe(`UrlSerializer`, () => {
 
     const parser = new QueryStringParser();
@@ -20,9 +21,9 @@ describe(`UrlSerializer`, () => {
 
         it("should parse multiple parameters into array", () => {
             const parsed = parser.parse("action=1&action=2&action");
-            expect((parsed["action"] as Array<string|boolean>).indexOf("1")).toBeGreaterThan(-1);
-            expect((parsed["action"] as Array<string|boolean>).indexOf("2")).toBeGreaterThan(-1);
-            expect((parsed["action"] as Array<string|boolean>).indexOf(true)).toBeGreaterThan(-1);
+            expect((parsed["action"] as Array<string | boolean>).indexOf("1")).toBeGreaterThan(-1);
+            expect((parsed["action"] as Array<string | boolean>).indexOf("2")).toBeGreaterThan(-1);
+            expect((parsed["action"] as Array<string | boolean>).indexOf(true)).toBeGreaterThan(-1);
         });
 
         it("should decode non-ascii characters in url params", () => {

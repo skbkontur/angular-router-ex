@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": false
+  },
+  "types": [
+    "jasmine",
+    "node"
+  ],
+  "typeRoots": [
+    "node_modules/@types"
+  ],
+  "include": [
+    "protractor.conf.ts",
+    "*.e2e.ts"
+  ]
+}
