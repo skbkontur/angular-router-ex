@@ -11,7 +11,7 @@
     "license": "MIT",
     "scripts": {
         "postinstall": "npm run webdriver:update",
-        "ci:travis": "npm run test && ngcompile",
+        "ci:travis": "npm run test && npm run ngcompile",
         "clean:dll": "npm run rimraf -- dll",
         "clean:dist": "npm run rimraf -- dist",
         "clean:install": "npm set progress=false && npm install",
