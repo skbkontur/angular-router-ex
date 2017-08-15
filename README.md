@@ -21,7 +21,7 @@ export const ROUTES: Routes = [
 ]
 ```
 
-Import angular-router-ex with your routs in main application module
+Import angular-router-ex with your routes in main application module
 ``` typescript
 import {RouterExModule} from "angular-router-ex";
 
@@ -35,6 +35,13 @@ export class AppModule {
 ...
 }
 ```
+
+Place router outlet in your root component template
+``` html
+<router-ex-outlet [autoScroll]="true"></router-ex-outlet>
+```
+
+[Visit wiki](https://github.com/skbkontur/angular-router-ex/wiki) for more documentation and examples.
 
 ### Demo Project
 
