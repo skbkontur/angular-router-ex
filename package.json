@@ -1,6 +1,6 @@
 {
     "name": "angular-router-ex",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "An Angular 2+ Router, custom route urls, route caching",
     "keywords": [
         "angular2",
