@@ -75,7 +75,6 @@ export class RouterExOutletComponent implements OnDestroy, IRouterOutlet {
             // reuse existing component ref
             this.activateComponent(cache.ref);
             cache.attached();
-            cache.ref.changeDetectorRef.detectChanges();
 
             if (cache.reuseStrategy === ReuseRouteStrategy.CACHEBACK) {
                 this.scrollWrapper.setScrollState(cache.scrollState);
@@ -94,9 +93,10 @@ export class RouterExOutletComponent implements OnDestroy, IRouterOutlet {
         ]);
         const inj = ReflectiveInjector.fromResolvedProviders(bindings, injector);
         let componentToActivate = this.prerenderContainer.createComponent(factory, this.prerenderContainer.length, inj, []);
+        this.prerenderContainer.detach();
 
         const onDone = () => {
-            componentToActivate.changeDetectorRef.detectChanges();
+            // componentToActivate.changeDetectorRef.detectChanges();
             if (this.autoScroll) {
                 this.scrollWrapper.moveTop();
             }
@@ -104,7 +104,6 @@ export class RouterExOutletComponent implements OnDestroy, IRouterOutlet {
 
         const noPrerender = () => {
             // no prerender
-            this.prerenderContainer.detach();
             this.activateComponent(componentToActivate);
 
             onDone();
@@ -116,6 +115,8 @@ export class RouterExOutletComponent implements OnDestroy, IRouterOutlet {
         // need to prerender component ?
         if ((componentToActivate.instance as IPrerenderRouterComponent).routePrerender) {
             let rendered = false;
+            componentToActivate.changeDetectorRef.detectChanges();
+
             const routeReady = (componentToActivate.instance as IPrerenderRouterComponent)
                 .routePrerender()
                 .then(() => {
