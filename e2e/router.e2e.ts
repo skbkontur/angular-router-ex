@@ -682,6 +682,34 @@ describe("Router", () => {
 
     });
 
+
+    describe("url hash", () => {
+
+        it("should not be parsed as a route parameter on initial navigation", () => {
+            browser.get("/item/1#52");
+            expectText("current-id","1");
+
+        });
+
+        it("should not be parsed as a route parameter on subsequent navigations", () => {
+            click("navigate-4");
+            expectText("current-id","4");
+        });
+
+        it("should not be parsed as a query parameter on initial navigation", () => {
+            browser.get("/querystring?awesome=yes#notreally");
+            expectText("observable-query-params-json","{\"awesome\":\"yes\"}");
+
+        });
+
+        it("should not be parsed as a query parameter on subsequent navigations", () => {
+            click("navigate-qs-hash");
+            expectText("observable-query-params-json","{\"search\":\"quest\"}");
+        });
+
+
+    });
+
   //TODO: Base Href Tests ?
 
 });

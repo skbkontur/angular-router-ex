@@ -111,8 +111,8 @@ export class Router {
             return Promise.resolve(null);
         }
         const queryParams = this.queryStringParser.serialize(p);
-        const urlParts = this.location.path(true).split("?");
-        const newUrl = queryParams.length ? urlParts[0] + "?" + queryParams : urlParts[0];
+        const urlParts = UrlParser.parseUrl(this.location.path(true));
+        const newUrl = queryParams.length ? urlParts.pathname + "?" + queryParams :  urlParts.pathname;
 
         return this.navigateByUrl(newUrl, navigationExtras);
     }
@@ -267,7 +267,7 @@ export class Router {
 
     private matchRoute(url: string, config: Routes): Promise<MatchedRouteResult> {
 
-        const path = url.split("?")[0];
+        const path = UrlParser.parseUrl(url).pathname;
 
         if (!this.resolvedRoutes[path]) {
             return this.matchService.findRoute(url, config).then(route => {
@@ -283,15 +283,15 @@ export class Router {
     }
 
     private resolveRoute(originalUrl: string, route: MatchedRouteResult): ResolvedRoute {
-        let urlParts = originalUrl.split("?");
+        let urlParts = UrlParser.parseUrl(originalUrl);
 
         let queryParams = {};
 
-        if (urlParts.length >=2) {
+        if (urlParts.search.length > 0) {
             // set url params to match its parsed state
-            queryParams = this.queryStringParser.parse(urlParts.slice(1).join("?") || "");
+            queryParams = this.queryStringParser.parse(urlParts.search);
             const qs = this.queryStringParser.serialize(queryParams);
-            originalUrl = urlParts[0] + (qs.length ? "?" + qs : "");
+            originalUrl = urlParts.pathname + (qs.length ? "?"+qs : "");
         }
 
         return {
@@ -320,7 +320,7 @@ export class Router {
             });
 
         // initial query string
-        const queryString = this.location.path(true).split("?")[1];
+        const queryString = UrlParser.parseUrl(this.location.path(true)).search;
         this._queryParams = new BehaviorSubject<QueryParams>(this.queryStringParser.parse(queryString))
     }
 
@@ -382,7 +382,6 @@ export class Router {
     private static stripTrailingSlash(url: string): string {
         return url[url.length - 1] === "/" ? url.slice(0, -1) : url;
     }
-
 }
 
 function checkActivate(newRoute: Route, injector: Injector): Promise<boolean> {

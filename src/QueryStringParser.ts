@@ -32,6 +32,10 @@ export class QueryStringParser {
             return params;
         }
 
+        if(rawQuery[0] === '?'){
+            rawQuery = rawQuery.substring(1);
+        }
+
         rawQuery.split("&").forEach((pair) => {
             let [key, value] = pair.split("=");
 

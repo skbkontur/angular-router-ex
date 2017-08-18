@@ -15,6 +15,7 @@ import {RouteContext} from "../../../src/";
                       <li><a tid="navigate-1" href="/item/1">Item 1</a></li>
                       <li><a tid="navigate-2" href="/item/2">Item 2</a></li>
                       <li><a tid="navigate-3" href="/item/3">Item 3</a></li>
+                      <li><a tid="navigate-4" href="/item/4#test">Item 4</a></li>
                   </ul>
                 `
 })

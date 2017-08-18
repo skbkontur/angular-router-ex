@@ -1,9 +1,11 @@
 import {MatchedRouteResult, Route} from "../Config";
+import {UrlParser} from "../";
+
 
 export function defaultRouteMatcher(url: string, route: Route): Promise<MatchedRouteResult> {
 
     //drop query string for matching
-    url = url.split("?")[0];
+    url = UrlParser.parseUrl(url).pathname;
 
     let parsedRoute = parseRoute(route.path);
     let parsedUrl = url.match(parsedRoute.regexp);

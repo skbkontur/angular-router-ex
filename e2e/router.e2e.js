@@ -501,5 +501,23 @@ describe("Router", function () {
             Helpers_1.expectText("header-message", "about deactivated");
         });
     });
+    describe("url hash", function () {
+        it("should not be parsed as a route parameter on initial navigation", function () {
+            protractor_1.browser.get("/item/1#52");
+            Helpers_1.expectText("current-id", "1");
+        });
+        it("should not be parsed as a route parameter on subsequent navigations", function () {
+            Helpers_1.click("navigate-4");
+            Helpers_1.expectText("current-id", "4");
+        });
+        it("should not be parsed as a query parameter on initial navigation", function () {
+            protractor_1.browser.get("/querystring?awesome=yes#notreally");
+            Helpers_1.expectText("observable-query-params-json", "{\"awesome\":\"yes\"}");
+        });
+        it("should not be parsed as a query parameter on subsequent navigations", function () {
+            Helpers_1.click("navigate-qs-hash");
+            Helpers_1.expectText("observable-query-params-json", "{\"search\":\"quest\"}");
+        });
+    });
     //TODO: Base Href Tests ?
 });

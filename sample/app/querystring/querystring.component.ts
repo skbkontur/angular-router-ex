@@ -78,4 +78,8 @@ export class QuerystringComponent implements OnInit {
   public setQueryWithQuestions(){
     this.router.navigateByUrl("/querystring?search=что? где? когда?&r321=what?")
   }
+
+    public setQueryWithHash(){
+        this.router.navigateByUrl("/querystring?search=quest#epic!")
+    }
 }
