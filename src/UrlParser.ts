@@ -24,11 +24,12 @@ export class UrlParser {
 
     UrlParser.parser.href = url;
 
+    // Host, Hostname, Port Protocol могут быть пучтыми в IE на относительных URL
     const parseResult: IUrlParseResult =  {
       hash: UrlParser.parser.hash,
       host: UrlParser.parser.host,
       hostname: UrlParser.parser.hostname,
-      pathname: UrlParser.parser.pathname,
+      pathname: UrlParser.parser.pathname[0] == "/" ? UrlParser.parser.pathname : "/" + UrlParser.parser.pathname, //IE FIX
       port: UrlParser.parser.port,
       protocol: UrlParser.parser.protocol,
       search: UrlParser.parser.search
