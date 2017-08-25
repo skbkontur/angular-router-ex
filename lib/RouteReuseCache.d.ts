@@ -25,31 +25,31 @@ export declare class RouteReuseCache {
     private currentCacheItem;
     private constraint;
     constructor(router: Router, constraint: any, location: IPageIdLocationStrategy, scrollWrapper: RouterScrollWrapper);
-    getForCurrentPage(cmpType: Type<any>): ReuseCacheItem;
     getCacheFor(ref: ComponentRef<any>): ReuseCacheItem;
+    getForCurrentPage(cmpType: Type<any>): ReuseCacheItem;
     private ensureCache(component, routeCtx);
-    private newRouteNavigation();
     private getCurrentPageId();
+    private newRouteNavigation();
 }
 export declare class ReuseCacheItem {
-    private _pageIds;
-    private _ref;
-    private _routeCtx;
     scrollState: any;
+    private _routeCtx;
     constructor(ref: ComponentRef<IReusableRouterComponent>, routeCtx: RouteContext, pageId?: string);
+    private _pageIds;
     /**
      * Cached within specified pageIds
      */
     readonly pageIds: string[];
-    readonly routeContext: RouteContext;
+    private _ref;
     /**
      * Cached component reference
      */
     readonly ref: ComponentRef<IReusableRouterComponent>;
+    readonly routeContext: RouteContext;
     readonly reuseStrategy: ReuseRouteStrategy;
     addPageId(pageId: string): void;
-    hasPageId(pageId: string): boolean;
-    detached(): void;
     attached(): void;
     destroy(): void;
+    detached(): void;
+    hasPageId(pageId: string): boolean;
 }
