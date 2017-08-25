@@ -71,7 +71,7 @@ export class Router {
         if (!this.currentContext) {
             return Promise.resolve(false);
         }
-        return this.navigateInternal(this.currentContext.url, {replaceUrl: true, force: true});
+        return this.navigateByUrl(this.currentContext.url, {replaceUrl: true, force: true});
     }
 
     navigateByUrl(url: string, extras?: NavigationExtras): Promise<any> {
@@ -94,7 +94,7 @@ export class Router {
         }
 
 
-        if (this.currentContext && url === this.currentContext.url) {
+        if ((extras && !extras.force) && this.currentContext && url === this.currentContext.url) {
             // navigation within same url
             return Promise.resolve(true);
         }
@@ -188,7 +188,7 @@ export class Router {
 
                 if (this.currentContext && this.currentContext.route.path === resolvedRoute.route.path) {
                     // navigating with same route
-                    shouldActivate = false;
+                    shouldActivate = force;
                     this.currentContext.update(url, resolvedRoute);
                     return {resolvedRoute, success: true};
                 }
