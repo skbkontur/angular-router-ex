@@ -12,6 +12,21 @@ import {IReusableRouterComponent, ReuseRouteStrategy, RouteContext, Router} from
 export class CacheBackComponent implements IReusableRouterComponent, OnDestroy {
 
     reuseRouteStrategy = ReuseRouteStrategy.CACHEBACK;
+    id$: Observable<string>;
+    qid$: Observable<string>;
+
+    constructor(routeContext: RouteContext, private router: Router) {
+        this.id$ = routeContext.routeParams.map(p => p["id"]);
+        this.qid$ = routeContext.queryParams.map(q => q["qid"]);
+    }
+
+    forceUpdate() {
+        this.router.navigateByUrl("/cacheback/1", {force: true});
+    }
+
+    ngOnDestroy(): void {
+        console.log('cache back destroyed');
+    }
 
     onRouteCached() {
         console.log('cache back detached');
@@ -19,18 +34,6 @@ export class CacheBackComponent implements IReusableRouterComponent, OnDestroy {
 
     onRouteReused() {
         console.log('cache back attached');
-    }
-
-    ngOnDestroy(): void {
-        console.log('cache back destroyed');
-    }
-
-    id$: Observable<string>;
-    qid$: Observable<string>;
-
-    constructor(routeContext: RouteContext, private router: Router) {
-        this.id$ = routeContext.routeParams.map(p => p["id"]);
-        this.qid$ = routeContext.queryParams.map(q => q["qid"]);
     }
 
     setQueryStringId(id: string) {

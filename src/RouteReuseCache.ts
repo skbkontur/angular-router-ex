@@ -60,6 +60,10 @@ export class RouteReuseCache {
         }
     }
 
+    getCacheFor(ref: ComponentRef<any>): ReuseCacheItem {
+        return this.cache.find(c => c.ref === ref);
+    }
+
     getForCurrentPage(cmpType: Type<any>): ReuseCacheItem {
 
         const cacheItems = this.cache.filter(c => c.ref.componentType === cmpType);
@@ -83,10 +87,6 @@ export class RouteReuseCache {
         }
 
         return undefined;
-    }
-
-    getCacheFor(ref: ComponentRef<any>): ReuseCacheItem {
-        return this.cache.find(c => c.ref === ref);
     }
 
     private ensureCache(component: ComponentRef<IReusableRouterComponent>, routeCtx: RouteContext): ReuseCacheItem {
@@ -128,6 +128,10 @@ export class RouteReuseCache {
 
     }
 
+    private getCurrentPageId(): string {
+        return this.location.getCurrentPageId();
+    }
+
     private newRouteNavigation() {
         // removes cache which out of constraint
 
@@ -160,20 +164,13 @@ export class RouteReuseCache {
 
     }
 
-    private getCurrentPageId(): string {
-        return this.location.getCurrentPageId();
-    }
-
 }
 
 
 export class ReuseCacheItem {
 
-    private _pageIds: string[];
-    private _ref: ComponentRef<IReusableRouterComponent>;
-    private _routeCtx: RouteContext;
-
     public scrollState: any;
+    private _routeCtx: RouteContext;
 
     constructor(ref: ComponentRef<IReusableRouterComponent>,
                 routeCtx: RouteContext,
@@ -185,6 +182,8 @@ export class ReuseCacheItem {
         this._routeCtx = routeCtx;
     }
 
+    private _pageIds: string[];
+
     /**
      * Cached within specified pageIds
      */
@@ -192,15 +191,17 @@ export class ReuseCacheItem {
         return this._pageIds;
     }
 
-    get routeContext(): RouteContext {
-        return this._routeCtx;
-    }
+    private _ref: ComponentRef<IReusableRouterComponent>;
 
     /**
      * Cached component reference
      */
     get ref(): ComponentRef<IReusableRouterComponent> {
         return this._ref;
+    }
+
+    get routeContext(): RouteContext {
+        return this._routeCtx;
     }
 
     get reuseStrategy(): ReuseRouteStrategy {
@@ -223,24 +224,6 @@ export class ReuseCacheItem {
         this._pageIds.push(pageId);
     }
 
-    hasPageId(pageId: string): boolean {
-        if (!this._pageIds) {
-            return false;
-        }
-        return this._pageIds.indexOf(pageId) >= 0;
-    }
-
-    detached() {
-        if (!this._ref) {
-            throw new Error("Route cache item was destroyed");
-        }
-
-        if (this.ref.instance.onRouteCached) {
-            this.ref.instance.onRouteCached();
-        }
-        this.routeContext.deactivate();
-    }
-
     attached() {
         if (!this._ref) {
             throw new Error("Route cache item was destroyed");
@@ -256,6 +239,24 @@ export class ReuseCacheItem {
             this._ref.destroy();
             this._ref = null;
         }
+    }
+
+    detached() {
+        if (!this._ref) {
+            throw new Error("Route cache item was destroyed");
+        }
+
+        if (this.ref.instance.onRouteCached) {
+            this.ref.instance.onRouteCached();
+        }
+        this.routeContext.deactivate();
+    }
+
+    hasPageId(pageId: string): boolean {
+        if (!this._pageIds) {
+            return false;
+        }
+        return this._pageIds.indexOf(pageId) >= 0;
     }
 
 }

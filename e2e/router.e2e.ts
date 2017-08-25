@@ -406,6 +406,13 @@ describe("Router", () => {
         click("navigate-qs-2");
         expectText("current-qs-id", "2");
       });
+
+        it("should full reload page when using force flag", () => {
+            navigate("cacheback");
+            fillInput("cache-input", "test string");
+            click("force-reload");
+            expectInput("cache-input", "");
+        });
     });
 
   });

@@ -302,6 +302,12 @@ describe("Router", function () {
                 Helpers_1.click("navigate-qs-2");
                 Helpers_1.expectText("current-qs-id", "2");
             });
+            fit("should full reload page when using force flag", function () {
+                Helpers_1.navigate("cacheback");
+                Helpers_1.fillInput("cache-input", "test string");
+                Helpers_1.click("force-reload");
+                Helpers_1.expectInput("cache-input", "");
+            });
         });
     });
     describe("prerender routes", function () {
