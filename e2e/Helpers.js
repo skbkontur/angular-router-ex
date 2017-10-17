@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var protractor_1 = require("protractor");
 function navigate(page) {
+    scrollWindow(0);
     getByTid("navigate-page-" + page).click();
     protractor_1.browser.sleep(50);
 }

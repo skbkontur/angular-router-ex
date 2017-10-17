@@ -43,11 +43,13 @@ describe("Router", function () {
         });
         it("should make navigation by router api (navigateByUrl)", function () {
             Helpers_1.navigate("home");
+            Helpers_1.scrollWindow(1000);
             Helpers_1.click("navigate-about");
             Helpers_1.expectPageTitle("About page");
         });
         it("should create new history item when using router api (navigateByUrl)", function () {
             Helpers_1.navigate("home");
+            Helpers_1.scrollWindow(1000);
             Helpers_1.click("navigate-about");
             Helpers_1.navigateBack();
             Helpers_1.expectPageTitle("Home page");
@@ -55,6 +57,7 @@ describe("Router", function () {
         it("should not create new history item when using router api with replaceUrl: true (navigateByUrl)", function () {
             Helpers_1.navigate("sticky");
             Helpers_1.navigate("home");
+            Helpers_1.scrollWindow(1000);
             Helpers_1.click("navigate-about-replace");
             Helpers_1.navigateBack();
             Helpers_1.expectPageTitle("Sticky page");

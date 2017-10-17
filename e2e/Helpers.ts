@@ -2,6 +2,7 @@ import {by, element, ElementFinder, browser, ElementArrayFinder} from "protracto
 declare var expect: any;
 
 export function navigate(page: string) {
+  scrollWindow(0);
   getByTid(`navigate-page-${page}`).click();
   browser.sleep(50);
 }

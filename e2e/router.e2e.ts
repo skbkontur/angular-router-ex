@@ -65,6 +65,7 @@ describe("Router", () => {
 
     it("should make navigation by router api (navigateByUrl)", () => {
       navigate("home");
+      scrollWindow(1000);
       click("navigate-about");
 
       expectPageTitle("About page");
@@ -72,6 +73,7 @@ describe("Router", () => {
 
     it("should create new history item when using router api (navigateByUrl)", () => {
       navigate("home");
+      scrollWindow(1000);
       click("navigate-about");
       navigateBack();
 
@@ -81,6 +83,8 @@ describe("Router", () => {
     it("should not create new history item when using router api with replaceUrl: true (navigateByUrl)", () => {
       navigate("sticky");
       navigate("home");
+      scrollWindow(1000);
+
       click("navigate-about-replace");
       navigateBack();
 
