@@ -10,7 +10,8 @@ export interface IRouterOutlet {
              url: string,
              component: Type<any>,
              resolver: ComponentFactoryResolver,
-             injector: Injector): Promise<IOutletActivationResult>;
+             injector: Injector,
+             force?: boolean): Promise<IOutletActivationResult>;
 
     activatedComponent: ComponentRef<any>
 

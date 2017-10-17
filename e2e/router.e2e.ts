@@ -55,15 +55,18 @@ describe("Router", () => {
     });
 
     it("should auto scroll at the top on new navigation", () => {
+
       navigate("home");
       scrollWindow(1000);
       click("cacheback-anchor");
 
       expectPageTitle("Cache back page");
       expectWindowScroll(0);
+
     });
 
     it("should make navigation by router api (navigateByUrl)", () => {
+
       navigate("home");
       scrollWindow(1000);
       click("navigate-about");
@@ -72,7 +75,8 @@ describe("Router", () => {
     });
 
     it("should create new history item when using router api (navigateByUrl)", () => {
-      navigate("home");
+
+        navigate("home");
       scrollWindow(1000);
       click("navigate-about");
       navigateBack();
@@ -81,7 +85,8 @@ describe("Router", () => {
     });
 
     it("should not create new history item when using router api with replaceUrl: true (navigateByUrl)", () => {
-      navigate("sticky");
+
+        navigate("sticky");
       navigate("home");
       scrollWindow(1000);
 

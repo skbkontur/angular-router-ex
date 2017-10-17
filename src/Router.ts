@@ -21,25 +21,12 @@ declare let Zone: any;
 @Injectable()
 export class Router {
 
-    get queryParams(): Observable<QueryParams> {
-        return this._queryParams;
-    }
-
-    get queryParamsSnapshot(): QueryParams {
-        return this._queryParams.getValue();
-    }
-
-    private _queryParams: BehaviorSubject<QueryParams>;
-
     private resolvedRoutes: { [path: string]: MatchedRouteResult } = {};
-
     private locationSubscription: ISubscription;
     private navigationId: number = 0;
-
     private currentContext: RouteContext;
     private navigations = new BehaviorSubject<NavigationParams>(null);
     private navigating: boolean;
-    private _events = new Subject<NavigationEvent>();
 
     constructor(private outletMap: RouterOutletMap,
                 private matchService: RouteMatchService,
@@ -55,8 +42,31 @@ export class Router {
         this.processNavigations();
     }
 
+    get queryParamsSnapshot(): QueryParams {
+        return this._queryParams.getValue();
+    }
+
+    private _queryParams: BehaviorSubject<QueryParams>;
+
+    get queryParams(): Observable<QueryParams> {
+        return this._queryParams;
+    }
+
+    private _events = new Subject<NavigationEvent>();
+
     get events(): Observable<NavigationEvent> {
         return this._events;
+    }
+
+    private static stripTrailingSlash(url: string): string {
+        return url[url.length - 1] === "/" ? url.slice(0, -1) : url;
+    }
+
+    private static urlEquals(url1: string, url2: string): boolean {
+        url1 = Router.stripTrailingSlash(url1);
+        url2 = Router.stripTrailingSlash(url2);
+
+        return decodeURIComponent(url1) === decodeURIComponent(url2);
     }
 
     initialNavigation() {
@@ -65,13 +75,6 @@ export class Router {
         if (this.navigationId === 0) {
             this.navigateByUrl(this.location.path(true), {replaceUrl: true});
         }
-    }
-
-    reload(): Promise<boolean> {
-        if (!this.currentContext) {
-            return Promise.resolve(false);
-        }
-        return this.navigateByUrl(this.currentContext.url, {replaceUrl: true, force: true});
     }
 
     navigateByUrl(url: string, extras?: NavigationExtras): Promise<any> {
@@ -106,25 +109,22 @@ export class Router {
 
     }
 
+    reload(): Promise<boolean> {
+        if (!this.currentContext) {
+            return Promise.resolve(false);
+        }
+        return this.navigateByUrl(this.currentContext.url, {replaceUrl: true, force: true});
+    }
+
     setQuery(p: QueryParams, navigationExtras?: NavigationExtras): Promise<any> {
         if (this.navigating) {
             return Promise.resolve(null);
         }
         const queryParams = this.queryStringParser.serialize(p);
         const urlParts = UrlParser.parseUrl(this.location.path(true));
-        const newUrl = queryParams.length ? urlParts.pathname + "?" + queryParams :  urlParts.pathname;
+        const newUrl = queryParams.length ? urlParts.pathname + "?" + queryParams : urlParts.pathname;
 
         return this.navigateByUrl(newUrl, navigationExtras);
-    }
-
-    updateQuery(p: QueryParams, navigationExtras?: NavigationExtras): Promise<any> {
-
-        let existingParams = {
-            ...this.queryParamsSnapshot,
-            ...p
-        };
-
-        return this.setQuery(existingParams, navigationExtras);
     }
 
     setUpLocationChangeListener(): void {
@@ -139,24 +139,47 @@ export class Router {
         }
     }
 
-    private navigateInternal(url: string, extras: NavigationExtras): Promise<boolean> {
+    updateQuery(p: QueryParams, navigationExtras?: NavigationExtras): Promise<any> {
 
-        let resolve = null, reject = null;
-        const result = new Promise<boolean>((r, rej) => {
-            resolve = r;
-            reject = rej;
+        let existingParams = {
+            ...this.queryParamsSnapshot,
+            ...p
+        };
+
+        return this.setQuery(existingParams, navigationExtras);
+    }
+
+    private checkDeactivate(currentRoute: Route, injector: Injector): Promise<boolean> {
+        if (!
+                currentRoute.canDeactivate
+        ) {
+            return Promise.resolve(true);
+        }
+
+        const outlet = this.outletMap.getOutlet(currentRoute.outlet);
+        const results = [];
+        for (let guardType of currentRoute.canDeactivate) {
+            const guard = injector.get(guardType) as CanDeactivate<any>;
+            results.push(guard.canDeactivate(outlet.activatedComponent, currentRoute));
+        }
+
+        return Promise.all(results).then(all => {
+            return !all.some(r => !r);
         });
+    }
 
-        this.scheduleNavigation({
-            extras: extras,
-            id: ++this.navigationId,
-            promise: result,
-            resolve,
-            reject,
-            url: url
+    private checkGuards(newRoute: ResolvedRoute): Promise<CheckGuardsResult> {
+        let deactivation = this.currentContext ? this.checkDeactivate(this.currentContext.route, this.currentContext.injector) : Promise.resolve(true);
+        // check deactivation first
+        return deactivation.then(success => {
+            if (!success) {
+                return {resolvedRoute: newRoute, success: false};
+            }
+            // check activation
+            return checkActivate(newRoute.route, newRoute.injector).then(success => {
+                return {resolvedRoute: newRoute, success: success};
+            })
         });
-
-        return result;
     }
 
     private executeScheduledNavigation({extras, id, url}: NavigationParams): Promise<any> {
@@ -218,7 +241,7 @@ export class Router {
                         this.location.go(url);
                     }
 
-                    outlet = this.outletMap.getOutlet();
+                    outlet = this.outletMap.getOutlet(checkGuardsResult.resolvedRoute.route.outlet);
 
                     const resolvedRoute = checkGuardsResult.resolvedRoute;
 
@@ -229,7 +252,8 @@ export class Router {
                             url,
                             resolvedRoute.component,
                             resolvedRoute.factoryResolver,
-                            resolvedRoute.injector
+                            resolvedRoute.injector,
+                            force
                         ).then(result => result.routeContext);
                     }
                 }
@@ -282,27 +306,24 @@ export class Router {
 
     }
 
-    private resolveRoute(originalUrl: string, route: MatchedRouteResult): ResolvedRoute {
-        let urlParts = UrlParser.parseUrl(originalUrl);
+    private navigateInternal(url: string, extras: NavigationExtras): Promise<boolean> {
 
-        let queryParams = {};
+        let resolve = null, reject = null;
+        const result = new Promise<boolean>((r, rej) => {
+            resolve = r;
+            reject = rej;
+        });
 
-        if (urlParts.search.length > 0) {
-            // set url params to match its parsed state
-            queryParams = this.queryStringParser.parse(urlParts.search);
-            const qs = this.queryStringParser.serialize(queryParams);
-            originalUrl = urlParts.pathname + (qs.length ? "?"+qs : "");
-        }
+        this.scheduleNavigation({
+            extras: extras,
+            id: ++this.navigationId,
+            promise: result,
+            resolve,
+            reject,
+            url: url
+        });
 
-        return {
-            component: route.component,
-            params: route.params,
-            factoryResolver: route.factoryResolver,
-            injector: route.injector || this.injector,
-            route: route.route,
-            queryParams,
-            url: originalUrl
-        }
+        return result;
     }
 
     private processNavigations() {
@@ -324,11 +345,6 @@ export class Router {
         this._queryParams = new BehaviorSubject<QueryParams>(this.queryStringParser.parse(queryString))
     }
 
-    private scheduleNavigation(nav: NavigationParams) {
-        this.navigations.next(nav);
-    }
-
-
     private resetUrlToCurrent(): void {
         if (this.currentContext
         ) {
@@ -339,48 +355,31 @@ export class Router {
         }
     }
 
-    private checkGuards(newRoute: ResolvedRoute): Promise<CheckGuardsResult> {
-        let deactivation = this.currentContext ? this.checkDeactivate(this.currentContext.route, this.currentContext.injector) : Promise.resolve(true);
-        // check deactivation first
-        return deactivation.then(success => {
-            if (!success) {
-                return {resolvedRoute: newRoute, success: false};
-            }
-            // check activation
-            return checkActivate(newRoute.route, newRoute.injector).then(success => {
-                return {resolvedRoute: newRoute, success: success};
-            })
-        });
-    }
+    private resolveRoute(originalUrl: string, route: MatchedRouteResult): ResolvedRoute {
+        let urlParts = UrlParser.parseUrl(originalUrl);
 
-    private checkDeactivate(currentRoute: Route, injector: Injector): Promise<boolean> {
-        if (!
-                currentRoute.canDeactivate
-        ) {
-            return Promise.resolve(true);
+        let queryParams = {};
+
+        if (urlParts.search.length > 0) {
+            // set url params to match its parsed state
+            queryParams = this.queryStringParser.parse(urlParts.search);
+            const qs = this.queryStringParser.serialize(queryParams);
+            originalUrl = urlParts.pathname + (qs.length ? "?" + qs : "");
         }
 
-        const outlet = this.outletMap.getOutlet(currentRoute.outlet);
-        const results = [];
-        for (let guardType of currentRoute.canDeactivate) {
-            const guard = injector.get(guardType) as CanDeactivate<any>;
-            results.push(guard.canDeactivate(outlet.activatedComponent, currentRoute));
+        return {
+            component: route.component,
+            params: route.params,
+            factoryResolver: route.factoryResolver,
+            injector: route.injector || this.injector,
+            route: route.route,
+            queryParams,
+            url: originalUrl
         }
-
-        return Promise.all(results).then(all => {
-            return !all.some(r => !r);
-        });
     }
 
-    private static urlEquals(url1: string, url2: string): boolean {
-        url1 = Router.stripTrailingSlash(url1);
-        url2 = Router.stripTrailingSlash(url2);
-
-        return decodeURIComponent(url1) === decodeURIComponent(url2);
-    }
-
-    private static stripTrailingSlash(url: string): string {
-        return url[url.length - 1] === "/" ? url.slice(0, -1) : url;
+    private scheduleNavigation(nav: NavigationParams) {
+        this.navigations.next(nav);
     }
 }
 
