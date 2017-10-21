@@ -1,6 +1,7 @@
 /*
  * Angular bootstraping
  */
+import "rxjs/add/operator/map";
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { decorateModuleRef } from './app/environment';
 import { bootloader } from '@angularclass/hmr';
