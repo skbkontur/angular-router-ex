@@ -44,6 +44,7 @@ export interface NavigationExtras {
  */
 export interface IPrerenderRouterComponent {
     routePrerender(): Promise<any>;
+    fallbackTimeout?: number;
 }
 export declare enum ReuseRouteStrategy {
     /**
