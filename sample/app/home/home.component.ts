@@ -36,6 +36,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
+    navigateToPrerenderWithCustomTimeout(timeout: number) {
+        this.router.navigateByUrl(`/prerender?prerenderTimeout=${timeout}`);
+    }
+
   public ngOnInit() {
     console.log('hello `Home` component');
     // this.title.getData().subscribe(data => this.data = data);

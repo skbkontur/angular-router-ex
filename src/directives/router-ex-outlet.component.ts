@@ -120,7 +120,8 @@ export class RouterExOutletComponent implements OnDestroy, IRouterOutlet {
         };
 
         // need to prerender component ?
-        if ((componentToActivate.instance as IPrerenderRouterComponent).routePrerender) {
+        const prerenderComponent = componentToActivate.instance as IPrerenderRouterComponent;
+        if (prerenderComponent.routePrerender) {
             let rendered = false;
             const routeReady = (componentToActivate.instance as IPrerenderRouterComponent)
                 .routePrerender()
@@ -133,7 +134,7 @@ export class RouterExOutletComponent implements OnDestroy, IRouterOutlet {
 
             if (this.activatedComponent) {
                 return new Promise(resolve => {
-                    const delay$ = delay.call(of(true), this.prerenderFallback);
+                    const delay$ = delay.call(of(true), prerenderComponent.fallbackTimeout || this.prerenderFallback);
                     merge.call(fromPromise(routeReady), delay$)
                         .subscribe(() => {
                             if (rendered) {

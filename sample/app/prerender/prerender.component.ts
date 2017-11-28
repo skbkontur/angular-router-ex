@@ -2,7 +2,10 @@ import {Component, OnInit} from "@angular/core";
 import {Title} from "./title";
 import {XLargeDirective} from "./x-large";
 import {disabledGuards, enableGuards} from "./Guards";
-import {IPrerenderRouterComponent, IReusableRouterComponent, ReuseRouteStrategy, Router} from "../../../src/";
+import {
+    IPrerenderRouterComponent, IReusableRouterComponent, ReuseRouteStrategy, RouteContext,
+    Router
+} from "../../../src/";
 
 @Component({
     selector: 'prerender',
@@ -13,16 +16,22 @@ export class PrerenderComponent implements IPrerenderRouterComponent, IReusableR
     reuseRouteStrategy = ReuseRouteStrategy.CACHEBACK;
 
     prerenderText: string;
+    fallbackTimeout: number;
 
-    constructor(private router: Router) {
+
+    constructor(private router: Router, private routerCtx: RouteContext) {
+        routerCtx.queryParams.subscribe(params => {
+            this.fallbackTimeout = params["prerenderTimeout"] ? parseInt(params["prerenderTimeout"] as string) : undefined;
+        });
 
     }
 
     routePrerender(): Promise<any> {
         this.prerenderText = "prerendered";
-        return new Promise(resolve => setTimeout(resolve, 3000));
+        if (!this.fallbackTimeout) {
+            return new Promise(resolve => setTimeout(resolve, 3000));
+        } else return new Promise(()=>{});
     }
-
     ngOnInit(): void {
         //this.router.setQuery({action: "1"}, {replaceUrl:true});
     }

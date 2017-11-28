@@ -497,6 +497,15 @@ describe("Router", () => {
       expectPageTitle("Prerender page");
     });
 
+      it("should wait for prerenderTimeout, passed in URL param", () => {
+          browser.get("/");
+          click("navigate-prerender-timeout");
+          browser.sleep(600);
+          expectPageTitle("Home page");
+          browser.sleep(1000);
+          expectPageTitle("Prerender page");
+      });
+
   });
 
   describe("query params", () => {
