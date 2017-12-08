@@ -1,1 +1,1 @@
-[{"__symbolic":"module","version":3,"metadata":{"IUrlParseResult":{"__symbolic":"interface"},"UrlParser":{"__symbolic":"class","statics":{"parser":null}}}},{"__symbolic":"module","version":1,"metadata":{"IUrlParseResult":{"__symbolic":"interface"},"UrlParser":{"__symbolic":"class","statics":{"parser":null}}}}]
+[{"__symbolic":"module","version":4,"metadata":{"IUrlParseResult":{"__symbolic":"interface"},"UrlParser":{"__symbolic":"class","statics":{"parser":null}}}}]
