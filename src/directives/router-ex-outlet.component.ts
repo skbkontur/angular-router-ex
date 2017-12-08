@@ -96,10 +96,10 @@ export class RouterExOutletComponent implements OnDestroy, IRouterOutlet {
         const routeContext = new RouteContext(url, route);
         // create new instance of the component
         const factory = resolver.resolveComponentFactory(componentType);
-        const bindings = ReflectiveInjector.resolve([
+        const inj = Injector.create([
             {provide: RouteContext, useValue: routeContext}
-        ]);
-        const inj = ReflectiveInjector.fromResolvedProviders(bindings, injector);
+        ], injector);
+        //const inj = bindings.get(RouteContext)//= ReflectiveInjector.fromResolvedProviders(bindings, injector);
         let componentToActivate = this.prerenderContainer.createComponent(factory, this.prerenderContainer.length, inj, []);
 
         const onDone = () => {
