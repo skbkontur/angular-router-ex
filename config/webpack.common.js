@@ -37,22 +37,6 @@ const METADATA = {
 module.exports = function (options) {
   isProd = options.env === 'production';
   return {
-
-    /*
-     * Cache generated modules and chunks to improve performance for multiple incremental builds.
-     * This is enabled by default in watch mode.
-     * You can pass false to disable it.
-     *
-     * See: http://webpack.github.io/docs/configuration.html#cache
-     */
-    //cache: false,
-
-    /*
-     * The entry point for the bundle
-     * Our Angular.js app
-     *
-     * See: http://webpack.github.io/docs/configuration.html#entry
-     */
     entry: {
 
       'polyfills': './sample/polyfills.browser.ts',
@@ -60,104 +44,51 @@ module.exports = function (options) {
                   './sample/main.browser.ts'
 
     },
-
-    /*
-     * Options affecting the resolving of modules.
-     *
-     * See: http://webpack.github.io/docs/configuration.html#resolve
-     */
     resolve: {
-
-      /*
-       * An array of extensions that should be used to resolve modules.
-       *
-       * See: http://webpack.github.io/docs/configuration.html#resolve-extensions
-       */
       extensions: ['.ts', '.js', '.json'],
-
-      // An array of directory names to be resolved to the current directory
       modules: [helpers.root('sample'), helpers.root('node_modules')],
-
     },
 
-    /*
-     * Options affecting the normal modules.
-     *
-     * See: http://webpack.github.io/docs/configuration.html#module
-     */
     module: {
 
       rules: [
-
-        /*
-         * Typescript loader support for .ts
-         *
-         * Component Template/Style integration using `angular2-template-loader`
-         * Angular 2 lazy loading (async routes) via `ng-router-loader`
-         *
-         * `ng-router-loader` expects vanilla JavaScript code, not TypeScript code. This is why the
-         * order of the loader matter.
-         *
-         * See: https://github.com/s-panferov/awesome-typescript-loader
-         * See: https://github.com/TheLarkInn/angular2-template-loader
-         * See: https://github.com/shlomiassaf/ng-router-loader
-         */
-        {
-          test: /\.ts$/,
-          use: [
-            {
-              loader: '@angularclass/hmr-loader',
-              options: {
-                pretty: !isProd,
-                prod: isProd
-              }
-            },
-            {
-              loader: 'awesome-typescript-loader',
-              options: {
-                configFileName: isProd ? 'tsconfig.json' : 'tsconfig.webpack.json'
-              }
-            },
-            {
-              loader: 'angular2-template-loader'
-            }
-          ],
-          exclude: [/\.(spec|e2e)\.ts$/]
-        },
-
-        /*
-         * Json loader support for *.json files.
-         *
-         * See: https://github.com/webpack/json-loader
-         */
+          {
+              test: /\.ts$/,
+              use: [
+                  {
+                      loader: '@angularclass/hmr-loader',
+                      options: {
+                          pretty: !isProd,
+                          prod: isProd
+                      }
+                  },
+                  {
+                      loader: 'awesome-typescript-loader',
+                      options: {
+                          configFileName: isProd ? 'tsconfig.json' : 'tsconfig.webpack.json'
+                      }
+                  },
+                  {
+                      loader: 'angular2-template-loader'
+                  }
+              ],
+              exclude: [/\.(spec|e2e)\.ts$/]
+          },
         {
           test: /\.json$/,
           use: 'json-loader'
         },
 
-        /*
-         * to string and css loader support for *.css files (from Angular components)
-         * Returns file content as string
-         *
-         */
         {
           test: /\.css$/,
           use: ['to-string-loader', 'css-loader'],
           exclude: [helpers.root('sample', 'styles')]
         },
-        /* Raw loader support for *.html
-         * Returns file content as string
-         *
-         * See: https://github.com/webpack/raw-loader
-         */
         {
           test: /\.html$/,
           use: 'raw-loader',
           exclude: [helpers.root('sample/index.html')]
         },
-
-        /* File loader for supporting images, for example, in CSS files.
-         */
         {
           test: /\.(jpg|png|gif)$/,
           use: 'file-loader'
@@ -307,12 +238,6 @@ module.exports = function (options) {
         /facade(\\|\/)math/,
         helpers.root('node_modules/@angular/core/src/facade/math.js')
       ),
-
-      new ngcWebpack.NgcWebpackPlugin({
-        disabled: !AOT,
-        tsConfig: helpers.root('tsconfig.webpack.json'),
-        resourceOverride: helpers.root('config/resource-override.js')
-      })
 
     ],
 
