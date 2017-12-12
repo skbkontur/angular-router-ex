@@ -8,7 +8,6 @@ import {
     Input,
     OnDestroy,
     Output,
-    ReflectiveInjector,
     Type,
     ViewChild,
     ViewContainerRef
