@@ -38,10 +38,10 @@
     },
     "peerDependencies": {
         "rxjs": "^5.0.1",
-        "@angular/core": ">=2.0.0",
-        "@angular/platform-browser": ">=2.0.0",
-        "@angular/common": ">=2.0.0",
-        "@angular/http": ">=2.0.0"
+        "@angular/core": ">=5.0.0",
+        "@angular/platform-browser": ">=5.0.0",
+        "@angular/common": ">=5.0.0",
+        "@angular/http": ">=5.0.0"
     },
     "devDependencies": {
         "@angular/common": "^5.1.0",
