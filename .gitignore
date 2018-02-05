@@ -46,6 +46,7 @@ npm-debug.log
 /__build__/**
 /public/dist/
 /src/*/dist/
+/src/dist/
 /dist/**
 /.awcache
 dll/

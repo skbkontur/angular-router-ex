@@ -1,0 +1,16 @@
+{
+    "name": "angular-router-ex",
+    "version": "2.0.1-alpha2",
+    "license": "MIT",
+    "description": "An Angular 2+ Router, custom route urls, route caching",
+    "scripts": {
+    },
+    "private": false,
+    "dependencies": {},
+    "peerDependencies": {
+        "rxjs": ">=5.5.0",
+        "@angular/core": ">=5.0.0",
+        "@angular/platform-browser": ">=5.0.0",
+        "@angular/common": ">=5.0.0"
+    }
+}

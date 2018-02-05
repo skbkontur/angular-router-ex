@@ -35,7 +35,7 @@
         "test": "npm run test:unit && npm run build:test && npm run build:demo && npm run test:run",
         "test:e2e": "npm run build:test && npm run protractor",
         "server:ci": " pushstate-server dist 3000",
-        "package": "ng-packagr -p ./ng-package.json"
+        "package": "ng-packagr -p ./src/ng-package.json",
     },
     "peerDependencies": {
         "rxjs": "^5.0.1",
