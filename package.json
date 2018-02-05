@@ -34,7 +34,8 @@
         "test:run": "npm-run-all -p -r server:ci protractor",
         "test": "npm run test:unit && npm run build:test && npm run build:demo && npm run test:run",
         "test:e2e": "npm run build:test && npm run protractor",
-        "server:ci": " pushstate-server dist 3000"
+        "server:ci": " pushstate-server dist 3000",
+        "package": "ng-packagr -p ./ng-package.json"
     },
     "peerDependencies": {
         "rxjs": "^5.0.1",
@@ -92,9 +93,9 @@
         "karma-remap-coverage": "^0.1.4",
         "karma-sourcemap-loader": "^0.3.7",
         "karma-webpack": "2.0.5",
+        "ng-packagr": "^2.0.0-rc.13",
         "ng-router-loader": "^2.1.0",
         "ngc-webpack": "^4.0.2",
-        "node-sass": "^4.2.0",
         "npm-run-all": "^4.1.1",
         "optimize-js-plugin": "0.0.4",
         "parse5": "^3.0.2",

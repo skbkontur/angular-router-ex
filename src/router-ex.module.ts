@@ -82,13 +82,14 @@ export class RouterExModule {
 }
 
 export function initialRouterNavigation(router: Router, ref: ApplicationRef) {
-    return (bootstrappedComponentRef: ComponentRef<any>) => {
-
+    function initNav(bootstrappedComponentRef: ComponentRef<any>){
         if (bootstrappedComponentRef !== ref.components[0]) {
             return;
         }
 
         router.initialNavigation();
-    };
+    }
+
+    return initNav;
 }
 

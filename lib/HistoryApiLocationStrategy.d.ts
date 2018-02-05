@@ -30,3 +30,4 @@ export declare class HistoryApiLocationStrategy extends LocationStrategy impleme
     back(): void;
 }
 export declare function ensureHistoryState(state?: any): HistoryPageState;
+export declare function generateUniqueId(): string;
