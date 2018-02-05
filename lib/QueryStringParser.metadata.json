@@ -1,1 +1,0 @@
-[{"__symbolic":"module","version":4,"metadata":{"QueryStringParser":{"__symbolic":"class","decorators":[{"__symbolic":"call","expression":{"__symbolic":"reference","module":"@angular/core","name":"Injectable","line":3,"character":1}}],"members":{"serialize":[{"__symbolic":"method"}],"parse":[{"__symbolic":"method"}]}}}}]
