@@ -1,34 +1,50 @@
-import {Observable} from "rxjs/Observable";
-import {ResolvedRoute, Route, QueryParams} from "./Config";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {BehaviorSubject, Observable} from "rxjs";
+import {QueryParams, ResolvedRoute, Route} from "./Config";
 import {Injector} from "@angular/core";
 import {isParamsEqual} from "./IsParamsEqual";
 
-export type Params = {[key: string]: string};
+export type Params = { [key: string]: string };
 
 export class RouteContext {
-
-    private _queryParams: BehaviorSubject<QueryParams>;
-    private _routeParams: BehaviorSubject<Params>;
-    private _url: string;
-    private _route: Route;
-    private _injector: Injector;
-    private _active = true;
 
     constructor(url: string, resolvedRoute: ResolvedRoute) {
         this.update(url, resolvedRoute);
     }
 
-    get active(): boolean {
-        return this._active;
+    private _queryParams: BehaviorSubject<QueryParams>;
+
+    get queryParams(): Observable<QueryParams> {
+        return this._queryParams;
     }
+
+    private _routeParams: BehaviorSubject<Params>;
+
+    get routeParams(): Observable<Params> {
+        return this._routeParams;
+    }
+
+    private _url: string;
+
+    get url(): string {
+        return this._url;
+    }
+
+    private _route: Route;
+
+    get route(): Route {
+        return this._route;
+    }
+
+    private _injector: Injector;
 
     get injector(): Injector {
         return this._injector;
     }
 
-    get queryParams(): Observable<QueryParams> {
-        return this._queryParams;
+    private _active = true;
+
+    get active(): boolean {
+        return this._active;
     }
 
     get queryParamsSnapshot(): QueryParams {
@@ -39,24 +55,12 @@ export class RouteContext {
         return this._routeParams.getValue();
     }
 
-    get routeParams(): Observable<Params> {
-        return this._routeParams;
-    }
-
-    get url(): string {
-        return this._url;
-    }
-
-    get route(): Route {
-        return this._route;
+    activate() {
+        this._active = true;
     }
 
     deactivate() {
         this._active = false;
-    }
-
-    activate() {
-        this._active = true;
     }
 
     update(url: string, resolvedRoute: ResolvedRoute) {

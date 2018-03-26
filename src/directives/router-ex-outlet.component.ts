@@ -16,13 +16,11 @@ import {RouteContext} from "../RouteContext";
 import {IOutletActivationResult, IRouterOutlet, RouterOutletMap} from "../RouterOutletMap";
 import {fromPromise} from "rxjs/observable/fromPromise";
 import {of} from "rxjs/observable/of";
-import {delay} from "rxjs/operator/delay";
-import {merge} from "rxjs/operator/merge";
 import {IPrerenderRouterComponent, ResolvedRoute, ReuseRouteStrategy} from "../Config";
 import {RouteReuseCache} from "../RouteReuseCache";
 import {RouterScrollWrapper} from "../RouterScrollWrapper";
 import {Route} from "../";
-
+import {delay, merge} from "rxjs/operators";
 
 @Component({
     selector: "router-ex-outlet",
@@ -133,8 +131,16 @@ export class RouterExOutletComponent implements OnDestroy, IRouterOutlet {
 
             if (this.activatedComponent) {
                 return new Promise(resolve => {
-                    const delay$ = delay.call(of(true), prerenderComponent.fallbackTimeout || this.prerenderFallback);
-                    merge.call(fromPromise(routeReady), delay$)
+
+                    const delay$ = of(true)
+                        .pipe(
+                            delay(prerenderComponent.fallbackTimeout || this.prerenderFallback)
+                        );
+
+                    fromPromise(routeReady)
+                        .pipe(
+                            merge(delay$)
+                        )
                         .subscribe(() => {
                             if (rendered) {
                                 return;
@@ -146,6 +152,7 @@ export class RouterExOutletComponent implements OnDestroy, IRouterOutlet {
                             onDone();
                             resolve({routeContext})
                         });
+
                 });
             } else {
                 return noPrerender();

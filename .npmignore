@@ -11,5 +11,6 @@ protractor.conf.js
 tsconfig.json
 tsconfig.webpack.json
 webpack.config.js
+coverage
 
 *.ngFactory.ts

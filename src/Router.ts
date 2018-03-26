@@ -1,9 +1,7 @@
 import {Inject, Injectable, Injector, Optional} from "@angular/core";
 import {APP_BASE_HREF, Location} from "@angular/common";
 import {RouteMatchService} from "./RouteMatchService";
-import {ISubscription} from "rxjs/Subscription";
-import {Subject} from "rxjs/Subject";
-import {Observable} from "rxjs/Observable";
+import {Observable, Subject, Subscription} from "rxjs";
 import {IRouterOutlet, RouterOutletMap} from "./RouterOutletMap";
 import {MatchedRouteResult, NavigationExtras, QueryParams, ResolvedRoute, Route, ROUTE_CONFIG, Routes} from "./Config";
 import {CanActivate, CanDeactivate} from "./Guards";
@@ -22,7 +20,7 @@ declare let Zone: any;
 export class Router {
 
     private resolvedRoutes: { [path: string]: MatchedRouteResult } = {};
-    private locationSubscription: ISubscription;
+    private locationSubscription: Subscription;
     private navigationId: number = 0;
     private currentContext: RouteContext;
     private navigations = new BehaviorSubject<NavigationParams>(null);
