@@ -4,6 +4,7 @@ import {XLargeDirective} from "./x-large";
 import {disabledGuards, enableGuards} from "./Guards";
 import {Observable} from "rxjs";
 import {IReusableRouterComponent, QueryParam, ReuseRouteStrategy, RouteContext, Router} from "../../../src/";
+import {map} from "rxjs/operators";
 
 @Component({
     selector: 'cache-back',
@@ -16,8 +17,13 @@ export class CacheBackComponent implements IReusableRouterComponent, OnDestroy {
     qid$: Observable<QueryParam>;
 
     constructor(routeContext: RouteContext, private router: Router) {
-        this.id$ = routeContext.routeParams.map(p => p["id"]);
-        this.qid$ = routeContext.queryParams.map(q => q["qid"]);
+        this.id$ = routeContext.routeParams.pipe(
+            map(p => p["id"])
+        );
+        this.qid$ = routeContext.queryParams
+            .pipe(
+                map(q => q["qid"])
+            );
     }
 
     forceUpdate() {
