@@ -14,13 +14,13 @@ import {
 } from "@angular/core";
 import {RouteContext} from "../RouteContext";
 import {IOutletActivationResult, IRouterOutlet, RouterOutletMap} from "../RouterOutletMap";
-import {fromPromise} from "rxjs/observable/fromPromise";
-import {of} from "rxjs/observable/of";
+import {of} from "rxjs";
 import {IPrerenderRouterComponent, ResolvedRoute, ReuseRouteStrategy} from "../Config";
 import {RouteReuseCache} from "../RouteReuseCache";
 import {RouterScrollWrapper} from "../RouterScrollWrapper";
 import {Route} from "../";
 import {delay, merge} from "rxjs/operators";
+import {from} from "rxjs";
 
 @Component({
     selector: "router-ex-outlet",
@@ -137,7 +137,8 @@ export class RouterExOutletComponent implements OnDestroy, IRouterOutlet {
                             delay(prerenderComponent.fallbackTimeout || this.prerenderFallback)
                         );
 
-                    fromPromise(routeReady)
+
+                    from(routeReady)
                         .pipe(
                             merge(delay$)
                         )

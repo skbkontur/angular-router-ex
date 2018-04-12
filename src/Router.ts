@@ -1,16 +1,14 @@
 import {Inject, Injectable, Injector, Optional} from "@angular/core";
 import {APP_BASE_HREF, Location} from "@angular/common";
 import {RouteMatchService} from "./RouteMatchService";
-import {Observable, Subject, Subscription} from "rxjs";
+import {BehaviorSubject, Observable, of, Subject, Subscription} from "rxjs";
 import {IRouterOutlet, RouterOutletMap} from "./RouterOutletMap";
 import {MatchedRouteResult, NavigationExtras, QueryParams, ResolvedRoute, Route, ROUTE_CONFIG, Routes} from "./Config";
 import {CanActivate, CanDeactivate} from "./Guards";
 import {NavigationCancel, NavigationEnd, NavigationEvent, NavigationStart} from "./RouteEvents";
 import {RouteContext} from "./RouteContext";
 import {QueryStringParser} from "./QueryStringParser";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {concatMap} from "rxjs/operator/concatMap";
-import {of} from "rxjs/observable/of";
+import {concatMap} from "rxjs/operators";
 import {isParamsEqual} from "./IsParamsEqual";
 import {UrlParser} from "./UrlParser";
 
@@ -129,7 +127,7 @@ export class Router {
         // Zone.current.wrap is needed because of the issue with RxJS scheduler,
         // which does not work properly with zone.js in IE and Safari
         if (!
-                this.locationSubscription
+            this.locationSubscription
         ) {
             this.locationSubscription = <any>this.location.subscribe(Zone.current.wrap((change: any) => {
                 this.navigateByUrl(change["url"], {replaceUrl: true});
@@ -149,7 +147,7 @@ export class Router {
 
     private checkDeactivate(currentRoute: Route, injector: Injector): Promise<boolean> {
         if (!
-                currentRoute.canDeactivate
+            currentRoute.canDeactivate
         ) {
             return Promise.resolve(true);
         }
@@ -325,18 +323,16 @@ export class Router {
     }
 
     private processNavigations() {
-        concatMap
-            .call(
-                this.navigations,
-                (nav: NavigationParams) => {
-                    if (nav) {
-                        return this.executeScheduledNavigation(nav).then(nav.resolve, nav.reject);
-                    } else {
-                        return <any>of(null);
-                    }
-                })
-            .subscribe(() => {
-            });
+        this.navigations.pipe(
+            concatMap((nav: NavigationParams) => {
+                if (nav) {
+                    return this.executeScheduledNavigation(nav).then(nav.resolve, nav.reject);
+                } else {
+                    return <any>of(null);
+                }
+            })
+        ).subscribe(() => {
+        })
 
         // initial query string
         const queryString = UrlParser.parseUrl(this.location.path(true)).search;
@@ -383,7 +379,7 @@ export class Router {
 
 function checkActivate(newRoute: Route, injector: Injector): Promise<boolean> {
     if (!
-            newRoute.canActivate
+        newRoute.canActivate
     ) {
         return Promise.resolve(true);
     }

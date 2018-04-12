@@ -4,27 +4,31 @@ import {XLargeDirective} from "./x-large";
 import {disabledGuards, enableGuards} from "./Guards";
 import {Observable} from "rxjs";
 import {RouteContext} from "../../../src/";
+import {map} from "rxjs/internal/operators";
 
 @Component({
-  selector: 'guard',
-  template: `<h1 tid="page-title">Item page</h1>
-                <p>
-                  current id: <span tid="current-id">{{id$|async}}</span>
-                </p>
-                  <ul>
-                      <li><a tid="navigate-1" href="/item/1">Item 1</a></li>
-                      <li><a tid="navigate-2" href="/item/2">Item 2</a></li>
-                      <li><a tid="navigate-3" href="/item/3">Item 3</a></li>
-                      <li><a tid="navigate-4" href="/item/4#test">Item 4</a></li>
-                  </ul>
-                `
+    selector: 'guard',
+    template: `<h1 tid="page-title">Item page</h1>
+    <p>
+        current id: <span tid="current-id">{{id$ | async}}</span>
+    </p>
+    <ul>
+        <li><a tid="navigate-1" href="/item/1">Item 1</a></li>
+        <li><a tid="navigate-2" href="/item/2">Item 2</a></li>
+        <li><a tid="navigate-3" href="/item/3">Item 3</a></li>
+        <li><a tid="navigate-4" href="/item/4#test">Item 4</a></li>
+    </ul>
+    `
 })
 export class ItemComponent {
 
-  id$: Observable<string>;
+    id$: Observable<string>;
 
-  constructor(routeContext: RouteContext) {
-    this.id$ = routeContext.routeParams.map(p => p["id"]);
-  }
+    constructor(routeContext: RouteContext) {
+        this.id$ = routeContext.routeParams
+            .pipe(
+                map(p => p["id"])
+            );
+    }
 
 }
