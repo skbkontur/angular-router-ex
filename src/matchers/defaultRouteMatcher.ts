@@ -1,5 +1,5 @@
 import {MatchedRouteResult, Route} from "../Config";
-import {UrlParser} from "../";
+import {UrlParser} from "../UrlParser";
 
 
 export function defaultRouteMatcher(url: string, route: Route): Promise<MatchedRouteResult> {
