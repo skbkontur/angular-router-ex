@@ -1,8 +1,8 @@
 {
     "name": "angular-router-ex",
-    "version": "3.0.0-beta.1",
+    "version": "3.0.0",
     "license": "MIT",
-    "description": "An Angular 6+ Router, custom route urls, route caching",
+    "description": "An Angular 6+ Router",
     "scripts": {},
     "private": false,
     "dependencies": {},
