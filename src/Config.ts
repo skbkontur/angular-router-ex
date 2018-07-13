@@ -67,7 +67,7 @@ export enum ReuseRouteStrategy {
      */
     STICKY = 1,
         /**
-         * Reuse route componentn only when use return on the route by history pop event
+         * Reuse route component only when use return on the route by history pop event
          */
     CACHEBACK = 2
 }
