@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var protractor_1 = require("protractor");
+const protractor_1 = require("protractor");
 exports.config = {
     baseUrl: 'http://localhost:3000/',
     specs: [
