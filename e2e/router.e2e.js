@@ -366,6 +366,14 @@ describe("Router", function () {
             protractor_1.browser.sleep(600);
             Helpers_1.expectPageTitle("Prerender page");
         });
+        it("should wait for prerenderTimeout, passed in URL param", function () {
+            protractor_1.browser.get("/");
+            Helpers_1.click("navigate-prerender-timeout");
+            protractor_1.browser.sleep(600);
+            Helpers_1.expectPageTitle("Home page");
+            protractor_1.browser.sleep(1000);
+            Helpers_1.expectPageTitle("Prerender page");
+        });
     });
     describe("query params", function () {
         var key1 = "sampleKey";

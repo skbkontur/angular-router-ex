@@ -1,17 +1,15 @@
-import {QueryParams, QueryParam} from "./Config";
-import {Injectable} from "@angular/core";
+import {QueryParam, QueryParams} from "./Config";
 
-@Injectable()
 export class QueryStringParser {
 
-    serialize(p: QueryParams): string {
+    static serialize(p: QueryParams): string {
         let res = [];
 
         for (let key in p) {
             if (p.hasOwnProperty(key)) {
                 if (Array.isArray(p[key])) {
 
-                    (p[key] as Array<boolean|string>).forEach((val) => {
+                    (p[key] as Array<boolean | string>).forEach((val) => {
                         res.push(key + (val === true ? "" : "=" + encodeURIComponent(val as string)));
                     });
                 } else {
@@ -25,14 +23,14 @@ export class QueryStringParser {
         return res.join("&");
     }
 
-    parse(rawQuery: string): QueryParams {
+    static parse(rawQuery: string): QueryParams {
         let params: QueryParams = {};
 
         if (!rawQuery) {
             return params;
         }
 
-        if(rawQuery[0] === '?'){
+        if (rawQuery[0] === '?') {
             rawQuery = rawQuery.substring(1);
         }
 
@@ -52,7 +50,7 @@ export class QueryStringParser {
                 params[key] = value || true;
             } else {
                 if (Array.isArray(params[key])) { // value already an array
-                    (params[key] as Array<string|boolean>).push(value || true);
+                    (params[key] as Array<string | boolean>).push(value || true);
                 } else { // make an array
                     params[key] = ([params[key], value || true] as QueryParam);
                 }
@@ -66,5 +64,5 @@ export class QueryStringParser {
 }
 
 function isNullOrUndefined(obj: any): boolean {
-    return typeof(obj) === "undefined" || obj === null;
+    return typeof (obj) === "undefined" || obj === null;
 }

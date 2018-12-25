@@ -32,7 +32,6 @@ export class Router {
                 private matchService: RouteMatchService,
                 private location: Location,
                 private injector: Injector,
-                private queryStringParser: QueryStringParser,
                 @Optional() @Inject(APP_BASE_HREF) private baseHref: string) {
 
         if (!this.baseHref) {
@@ -77,11 +76,10 @@ export class Router {
         }
     }
 
-    navigateByUrl(url: string, extras?: NavigationExtras): Promise<any> {
+    navigateByUrl(url: string, extras?: NavigationExtras, params?: QueryParams): Promise<any> {
         // absolute url
+        const requestedUrl = UrlParser.parseUrl(url);
         if (url.indexOf("https://") === 0 || url.indexOf("http://") === 0 || url.indexOf("//") === 0) {
-            const requestedUrl = UrlParser.parseUrl(url);
-
             if (window.location
                 && window.location.host == requestedUrl.host
                 && window.location.protocol == requestedUrl.protocol) {
@@ -96,6 +94,16 @@ export class Router {
             url = this.baseHref + url;
         }
 
+        if (params) {
+            let _combinedQueryParams;
+            if (requestedUrl.search && requestedUrl.search.length) {
+                _combinedQueryParams = {...QueryStringParser.parse(requestedUrl.search), ...params};
+            } else {
+                _combinedQueryParams = params;
+            }
+            url = url.split("?", 1)[0];
+            url += `?${QueryStringParser.serialize(_combinedQueryParams)}`;
+        }
 
         if ((extras && !extras.force) && this.currentContext && url === this.currentContext.url) {
             // navigation within same url
@@ -120,7 +128,7 @@ export class Router {
         if (this.navigating) {
             return Promise.resolve(null);
         }
-        const queryParams = this.queryStringParser.serialize(p);
+        const queryParams = QueryStringParser.serialize(p);
         const urlParts = UrlParser.parseUrl(this.location.path(true));
         const newUrl = queryParams.length ? urlParts.pathname + "?" + queryParams : urlParts.pathname;
 
@@ -131,7 +139,7 @@ export class Router {
         // Zone.current.wrap is needed because of the issue with RxJS scheduler,
         // which does not work properly with zone.js in IE and Safari
         if (!
-                this.locationSubscription
+            this.locationSubscription
         ) {
             this.locationSubscription = <any>this.location.subscribe(Zone.current.wrap((change: any) => {
                 this.navigateByUrl(change["url"], {replaceUrl: true});
@@ -151,7 +159,7 @@ export class Router {
 
     private checkDeactivate(currentRoute: Route, injector: Injector): Promise<boolean> {
         if (!
-                currentRoute.canDeactivate
+            currentRoute.canDeactivate
         ) {
             return Promise.resolve(true);
         }
@@ -256,8 +264,7 @@ export class Router {
                             force
                         ).then(result => result.routeContext);
                     }
-                }
-                else {
+                } else {
                     // guard blocked navigation
                     this.resetUrlToCurrent();
                     navigationCanceled = true;
@@ -342,15 +349,14 @@ export class Router {
 
         // initial query string
         const queryString = UrlParser.parseUrl(this.location.path(true)).search;
-        this._queryParams = new BehaviorSubject<QueryParams>(this.queryStringParser.parse(queryString))
+        this._queryParams = new BehaviorSubject<QueryParams>(QueryStringParser.parse(queryString))
     }
 
     private resetUrlToCurrent(): void {
         if (this.currentContext
         ) {
             this.location.replaceState(this.currentContext.url);
-        }
-        else {
+        } else {
             // TODO ситуация когда пользователь сразу переходит на защищенный маршрут
         }
     }
@@ -362,8 +368,8 @@ export class Router {
 
         if (urlParts.search.length > 0) {
             // set url params to match its parsed state
-            queryParams = this.queryStringParser.parse(urlParts.search);
-            const qs = this.queryStringParser.serialize(queryParams);
+            queryParams = QueryStringParser.parse(urlParts.search);
+            const qs = QueryStringParser.serialize(queryParams);
             originalUrl = urlParts.pathname + (qs.length ? "?" + qs : "");
         }
 
@@ -385,7 +391,7 @@ export class Router {
 
 function checkActivate(newRoute: Route, injector: Injector): Promise<boolean> {
     if (!
-            newRoute.canActivate
+        newRoute.canActivate
     ) {
         return Promise.resolve(true);
     }

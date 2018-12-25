@@ -1,33 +1,32 @@
-import {QueryStringParser} from "../src/QueryStringParser";
+import {QueryStringQueryStringParser} from "../src/QueryStringQueryStringParser";
 import {QueryParams} from "../src/Config";
+import {QueryStringParser} from "../src/QueryStringParser";
 
 describe(`UrlSerializer`, () => {
 
-    const parser = new QueryStringParser();
-
     describe(`url parsing`, () => {
         it("should parse url string", () => {
-            const parsed = parser.parse("action=transfer&foo=bar");
+            const parsed = QueryStringParser.parse("action=transfer&foo=bar");
             expect(parsed["action"]).toBe("transfer");
             expect(parsed["foo"]).toBe("bar");
         });
 
         it("should parse valueless parameters", () => {
-            const parsed = parser.parse("action&blue&loader");
+            const parsed = QueryStringParser.parse("action&blue&loader");
             expect(parsed["action"]).toBe(true);
             expect(parsed["blue"]).toBe(true);
             expect(parsed["loader"]).toBe(true);
         });
 
         it("should parse multiple parameters into array", () => {
-            const parsed = parser.parse("action=1&action=2&action");
+            const parsed = QueryStringParser.parse("action=1&action=2&action");
             expect((parsed["action"] as Array<string | boolean>).indexOf("1")).toBeGreaterThan(-1);
             expect((parsed["action"] as Array<string | boolean>).indexOf("2")).toBeGreaterThan(-1);
             expect((parsed["action"] as Array<string | boolean>).indexOf(true)).toBeGreaterThan(-1);
         });
 
         it("should decode non-ascii characters in url params", () => {
-            const parsed = parser.parse("black=50%25&q=%D0%96%D0%B5%D1%81%D1%82%D1%8C");
+            const parsed = QueryStringParser.parse("black=50%25&q=%D0%96%D0%B5%D1%81%D1%82%D1%8C");
             expect(parsed["black"]).toBe("50%");
             expect(parsed["q"]).toBe("Жесть");
         });
@@ -42,7 +41,7 @@ describe(`UrlSerializer`, () => {
                 "filter": "blue"
             };
 
-            const serialized = parser.serialize(params);
+            const serialized = QueryStringParser.serialize(params);
             const parts = serialized.split("&");
             /* for .. in does not guarantee order of keys */
             expect(parts.indexOf("action=controls")).toBeGreaterThan(-1);
@@ -55,7 +54,7 @@ describe(`UrlSerializer`, () => {
                 "isCool": true,
             };
 
-            const serialized = parser.serialize(params);
+            const serialized = QueryStringParser.serialize(params);
             expect(serialized).toBe("isCool");
         });
 
@@ -65,7 +64,7 @@ describe(`UrlSerializer`, () => {
                 "shapes": ["circle", "rectangle", "ellipse"],
             };
 
-            const serialized = parser.serialize(params);
+            const serialized = QueryStringParser.serialize(params);
 
             const parts = serialized.split("&");
 
@@ -80,7 +79,7 @@ describe(`UrlSerializer`, () => {
                 "parent": "Мама",
             };
 
-            const serialized = parser.serialize(params);
+            const serialized = QueryStringParser.serialize(params);
 
             expect(serialized).toBe("parent=%D0%9C%D0%B0%D0%BC%D0%B0");
         });
@@ -92,7 +91,7 @@ describe(`UrlSerializer`, () => {
                 "pet": null
             };
 
-            const serialized = parser.serialize(params);
+            const serialized = QueryStringParser.serialize(params);
 
             expect(serialized).toBe("parent=mother");
         });
