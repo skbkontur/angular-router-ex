@@ -1,6 +1,6 @@
 import {ComponentRef, Inject, Injectable, InjectionToken, Type} from "@angular/core";
 import {Router} from "./Router";
-import {NavigationEnd, NavigationStart} from "./RouteEvents";
+import {NavigationEnd, NavigationEvent, NavigationStart} from "./RouteEvents";
 import {IReusableRouterComponent, ReuseRouteStrategy, Route} from "./Config";
 import {LocationStrategy} from "@angular/common";
 import {IPageIdLocationStrategy} from "./HistoryApiLocationStrategy";

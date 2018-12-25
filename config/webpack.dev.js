@@ -4,16 +4,12 @@
 
 const helpers = require('./helpers');
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const webpackMergeDll = webpackMerge.strategy({plugins: 'replace'});
 const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
 
 /**
  * Webpack Plugins
  */
-const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
-const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
-const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
 
 /**
  * Webpack Constants
@@ -28,9 +24,6 @@ const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
   ENV: ENV,
   HMR: HMR
 });
-
-
-const DllBundlesPlugin = require('webpack-dll-bundles-plugin').DllBundlesPlugin;
 
 /**
  * Webpack configuration
@@ -86,7 +79,7 @@ module.exports = function (options) {
       chunkFilename: '[id].chunk.js',
 
       library: 'ac_[name]',
-      libraryTarget: 'var',
+      libraryTarget: 'var'
     },
 
     module: {
@@ -126,64 +119,7 @@ module.exports = function (options) {
           'ENV': JSON.stringify(METADATA.ENV),
           'NODE_ENV': JSON.stringify(METADATA.ENV),
         }
-      }),
-
-      new DllBundlesPlugin({
-        bundles: {
-          polyfills: [
-            'core-js',
-            {
-              name: 'zone.js',
-              path: 'zone.js/dist/zone.js'
-            },
-            {
-              name: 'zone.js',
-              path: 'zone.js/dist/long-stack-trace-zone.js'
-            },
-          ],
-          vendor: [
-            '@angular/platform-browser',
-            '@angular/platform-browser-dynamic',
-            '@angular/core',
-            '@angular/common',
-            '@angular/forms',
-            '@angular/http',
-            '@angularclass/hmr',
-            'rxjs',
-          ]
-        },
-        dllDir: helpers.root('dll'),
-        webpackConfig: webpackMergeDll(commonConfig({env: ENV}), {
-          devtool: 'cheap-module-source-map',
-          plugins: []
-        })
-      }),
-
-      /**
-       * Plugin: AddAssetHtmlPlugin
-       * Description: Adds the given JS or CSS file to the files
-       * Webpack knows about, and put it into the list of assets
-       * html-webpack-plugin injects into the generated html.
-       *
-       * See: https://github.com/SimenB/add-asset-html-webpack-plugin
-       */
-      new AddAssetHtmlPlugin([
-        { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('polyfills')}`) },
-        { filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('vendor')}`) }
-      ]),
-
-
-      /**
-       * Plugin LoaderOptionsPlugin (experimental)
-       *
-       * See: https://gist.github.com/sokra/27b24881210b56bbaff7
-       */
-      new LoaderOptionsPlugin({
-        debug: true,
-        options: {
-
-        }
-      }),
+      })
 
     ],
 

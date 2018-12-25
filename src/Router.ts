@@ -1,18 +1,14 @@
 import {Inject, Injectable, Injector, Optional} from "@angular/core";
 import {APP_BASE_HREF, Location} from "@angular/common";
 import {RouteMatchService} from "./RouteMatchService";
-import {ISubscription} from "rxjs/Subscription";
-import {Subject} from "rxjs/Subject";
-import {Observable} from "rxjs/Observable";
+import {BehaviorSubject, Observable, of, Subject, Subscription} from "rxjs";
 import {IRouterOutlet, RouterOutletMap} from "./RouterOutletMap";
 import {MatchedRouteResult, NavigationExtras, QueryParams, ResolvedRoute, Route, ROUTE_CONFIG, Routes} from "./Config";
 import {CanActivate, CanDeactivate} from "./Guards";
 import {NavigationCancel, NavigationEnd, NavigationEvent, NavigationStart} from "./RouteEvents";
 import {RouteContext} from "./RouteContext";
 import {QueryStringParser} from "./QueryStringParser";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {concatMap} from "rxjs/operator/concatMap";
-import {of} from "rxjs/observable/of";
+import {concatMap} from "rxjs/operators";
 import {isParamsEqual} from "./IsParamsEqual";
 import {UrlParser} from "./UrlParser";
 
@@ -22,7 +18,7 @@ declare let Zone: any;
 export class Router {
 
     private resolvedRoutes: { [path: string]: MatchedRouteResult } = {};
-    private locationSubscription: ISubscription;
+    private locationSubscription: Subscription;
     private navigationId: number = 0;
     private currentContext: RouteContext;
     private navigations = new BehaviorSubject<NavigationParams>(null);
@@ -334,18 +330,16 @@ export class Router {
     }
 
     private processNavigations() {
-        concatMap
-            .call(
-                this.navigations,
-                (nav: NavigationParams) => {
-                    if (nav) {
-                        return this.executeScheduledNavigation(nav).then(nav.resolve, nav.reject);
-                    } else {
-                        return <any>of(null);
-                    }
-                })
-            .subscribe(() => {
-            });
+        this.navigations.pipe(
+            concatMap((nav: NavigationParams) => {
+                if (nav) {
+                    return this.executeScheduledNavigation(nav).then(nav.resolve, nav.reject);
+                } else {
+                    return <any>of(null);
+                }
+            })
+        ).subscribe(() => {
+        })
 
         // initial query string
         const queryString = UrlParser.parseUrl(this.location.path(true)).search;

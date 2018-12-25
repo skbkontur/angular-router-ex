@@ -101,7 +101,7 @@ export function ensureHistoryState(state?: any): HistoryPageState {
   return currentState;
 }
 
-function generateUniqueId(): string {
+export function generateUniqueId(): string {
   let idstr = String.fromCharCode(Math.floor((Math.random() * 25) + 65));
   do {
     // between numbers and characters (48 is 0 and 90 is Z (42-48 = 90)

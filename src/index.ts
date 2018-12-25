@@ -1,7 +1,8 @@
 export {Router} from "./Router";
-export {RouterOutletMap, IRouterOutlet} from "./RouterOutletMap";
+export {IOutletActivationResult, RouterOutletMap, IRouterOutlet} from "./RouterOutletMap";
 
 export {
+    ResolvedRoute,
     NavigationExtras,
     Routes,
     Route,

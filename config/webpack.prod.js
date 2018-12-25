@@ -110,6 +110,12 @@ module.exports = function (env) {
      */
     plugins: [
 
+        new ngcWebpack.NgcWebpackPlugin({
+            disabled: !AOT,
+            tsConfig: helpers.root('tsconfig.webpack.json'),
+            resourceOverride: helpers.root('config/resource-override.js')
+        }),
+
       /**
        * Webpack plugin to optimize a JavaScript file for faster initial load
        * by wrapping eagerly-invoked functions.

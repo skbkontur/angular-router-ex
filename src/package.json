@@ -1,0 +1,15 @@
+{
+    "name": "angular-router-ex",
+    "version": "4.0.0",
+    "license": "MIT",
+    "description": "An Angular 6+ Router",
+    "scripts": {},
+    "private": false,
+    "dependencies": {},
+    "peerDependencies": {
+        "rxjs": ">=6.0.0",
+        "@angular/core": ">=6.0.0",
+        "@angular/platform-browser": ">=6.0.0",
+        "@angular/common": ">=6.0.0"
+    }
+}
