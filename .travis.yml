@@ -17,4 +17,5 @@ before_script:
 install:
   - npm install
 script:
+  - webdriver-manager update
   - npm run ci:travis
