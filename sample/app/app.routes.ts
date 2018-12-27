@@ -10,6 +10,8 @@ import {NoContentComponent} from "./no-content";
 import {QuerystringComponent} from "./querystring/querystring.component";
 import {PrerenderComponent} from "./prerender/prerender.component";
 import {ErrorNavigationComponent} from "./error-navigation/error-navigation.component";
+import {MultipleOutletsComponent} from "./multiple-outlets/multiple-outlets.component";
+import {MultipleOutletContentComponent} from "./multiple-outlets/multiple-outlet-content.component";
 
 export const ROUTES: Routes = [
     {path: "", component: HomeComponent},
@@ -23,12 +25,12 @@ export const ROUTES: Routes = [
     {path: "/prerender", component: PrerenderComponent},
     {
         path: "/detail", loadModule: () => {
-        return new Promise(resolve => {
-            require.ensure([], () => {
-                resolve(require("./+detail/detail.module")["DetailModule"]);
-            }, "detail");
-        })
-    },
+            return new Promise(resolve => {
+                require.ensure([], () => {
+                    resolve(require("./+detail/detail.module")["DetailModule"]);
+                }, "detail");
+            })
+        },
         loadModuleCondition: url => (url.indexOf("/detail") === 0),
     },
     {
@@ -37,6 +39,8 @@ export const ROUTES: Routes = [
             return Promise.reject("test error");
         }
     },
+    {path: "/multiple-outlets/:id", component: MultipleOutletContentComponent, outlet: "extra-outlet"},
+    {path: "/multiple-outlets", component: MultipleOutletsComponent},
     {path: "**", component: NoContentComponent},
     {path: "##", component: ErrorNavigationComponent},
 ];

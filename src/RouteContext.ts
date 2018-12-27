@@ -17,6 +17,10 @@ export class RouteContext {
         return this._queryParams;
     }
 
+    get outlet() {
+        return this._route.outlet;
+    }
+
     private _routeParams: BehaviorSubject<Params>;
 
     get routeParams(): Observable<Params> {
