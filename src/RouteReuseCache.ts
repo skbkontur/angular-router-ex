@@ -42,7 +42,7 @@ export class RouteReuseCache {
 
         if (location.getCurrentPageId) {
             router.events.subscribe((e: NavigationEvent) => {
-                if (e instanceof NavigationEnd) {
+                if (e instanceof NavigationEnd && !e.routeContext.outlet) {
                     this.currentCacheItem = this.ensureCache(e.activatedComponent, e.routeContext);
 
                     if (!this.lastRouteConfig || this.lastRouteConfig !== e.routeContext.route) {
@@ -94,7 +94,8 @@ export class RouteReuseCache {
             return undefined; // not a reusable component
         }
 
-        const cacheBack = component.instance.reuseRouteStrategy === ReuseRouteStrategy.CACHEBACK;
+        // do not cache other outlets than default
+        const cacheBack = component.instance.reuseRouteStrategy === ReuseRouteStrategy.CACHEBACK && !routeCtx.outlet;
 
         const pageId = this.getCurrentPageId();
         if (!pageId) {
@@ -144,7 +145,8 @@ export class RouteReuseCache {
         let cacheItemsToDrop: ReuseCacheItem[] = [], stickyRoutesUsed = 0;
 
         for (const cacheItem of this.cache) {
-            if (cacheItem.reuseStrategy === ReuseRouteStrategy.CACHEBACK) {
+            // do not clear cacheback for all other outlets
+            if (cacheItem.reuseStrategy === ReuseRouteStrategy.CACHEBACK && !cacheItem.routeContext.outlet) {
                 if (this.newRouteNavigations.every(n => !cacheItem.hasPageId(n))) {
                     cacheItemsToDrop.push(cacheItem);
                 }

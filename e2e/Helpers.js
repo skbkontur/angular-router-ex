@@ -11,8 +11,9 @@ function stop() {
     protractor_1.browser.wait(() => false, 10000000);
 }
 exports.stop = stop;
-function getByTid(tid) {
-    return protractor_1.element(protractor_1.by.css(`[tid=${tid}]`));
+function getByTid(tid, scope) {
+    const selector = protractor_1.by.css(`[tid=${tid}]`);
+    return scope ? scope.element(selector) : protractor_1.element(selector);
 }
 exports.getByTid = getByTid;
 function getAllByTid(tid) {
@@ -34,6 +35,11 @@ function click(tid) {
     el.click();
 }
 exports.click = click;
+function expectDisplayed(tid, scope) {
+    const elementToExpect = typeof tid === "string" ? getByTid(tid, scope) : tid;
+    expect(elementToExpect.isDisplayed()).toBeTruthy();
+}
+exports.expectDisplayed = expectDisplayed;
 function fillInput(tid, text) {
     const el = getByTid(tid);
     el.sendKeys(text);

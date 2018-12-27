@@ -537,4 +537,17 @@ describe("Router", () => {
         });
     });
     //TODO: Base Href Tests ?
+    describe("multiple outlets", () => {
+        beforeEach(() => {
+            protractor_1.browser.get("/multiple-outlets");
+            Helpers_1.click("multiple-outlets-another-outlet-link");
+        });
+        it("should not detach component from default outlet, while navigating over other outlet routes", () => {
+            Helpers_1.expectDisplayed("multiple-outlets-default-outlet-content");
+            Helpers_1.expectDisplayed("multiple-outlets-another-outlet-content");
+            Helpers_1.click("multiple-outlets-another-outlet-next-link");
+            Helpers_1.expectDisplayed("multiple-outlets-default-outlet-content");
+            Helpers_1.expectDisplayed("multiple-outlets-another-outlet-content");
+        });
+    });
 });

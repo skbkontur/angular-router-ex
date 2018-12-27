@@ -30,6 +30,8 @@ import {PrerenderComponent} from "./prerender/prerender.component";
 import {ErrorNavigationComponent} from "./error-navigation/error-navigation.component";
 import {HeaderMessageService} from "./header-message.service";
 import {QueryStringParser} from "../../src/QueryStringParser";
+import {MultipleOutletsComponent} from "./multiple-outlets/multiple-outlets.component";
+import {MultipleOutletContentComponent} from "./multiple-outlets/multiple-outlet-content.component";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -61,6 +63,8 @@ type StoreType = {
         StickyComponent,
         CacheBackComponent,
         QuerystringComponent,
+        MultipleOutletsComponent,
+        MultipleOutletContentComponent,
         NotInOutletComponent,
         PrerenderComponent,
         ErrorNavigationComponent
@@ -83,6 +87,25 @@ export class AppModule {
                 public appState: AppState) {
     }
 
+    public hmrAfterDestroy(store: StoreType) {
+        // display new elements
+        store.disposeOldHosts();
+        delete store.disposeOldHosts;
+    }
+
+    public hmrOnDestroy(store: StoreType) {
+        const cmpLocation = this.appRef.components.map((cmp) => cmp.location.nativeElement);
+        // save state
+        const state = this.appState._state;
+        store.state = state;
+        // recreate root elements
+        store.disposeOldHosts = createNewHosts(cmpLocation);
+        // save input values
+        store.restoreInputValues = createInputTransfer();
+        // remove styles
+        removeNgStyles();
+    }
+
     public hmrOnInit(store: StoreType) {
         if (!store || !store.state) {
             return;
@@ -99,25 +122,6 @@ export class AppModule {
         this.appRef.tick();
         delete store.state;
         delete store.restoreInputValues;
-    }
-
-    public hmrOnDestroy(store: StoreType) {
-        const cmpLocation = this.appRef.components.map((cmp) => cmp.location.nativeElement);
-        // save state
-        const state = this.appState._state;
-        store.state = state;
-        // recreate root elements
-        store.disposeOldHosts = createNewHosts(cmpLocation);
-        // save input values
-        store.restoreInputValues = createInputTransfer();
-        // remove styles
-        removeNgStyles();
-    }
-
-    public hmrAfterDestroy(store: StoreType) {
-        // display new elements
-        store.disposeOldHosts();
-        delete store.disposeOldHosts;
     }
 
 }

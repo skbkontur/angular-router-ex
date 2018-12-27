@@ -1,4 +1,4 @@
-import {Type, ComponentFactoryResolver, Injector, NgModuleFactory, InjectionToken} from "@angular/core";
+import {ComponentFactoryResolver, InjectionToken, Injector, NgModuleFactory, Type} from "@angular/core";
 
 export const ROUTE_CONFIG = new InjectionToken<Routes>("router ex route config");
 
@@ -10,8 +10,8 @@ export type LoadModuleCallback = () => Promise<NgModuleFactory<any>>;
 export type LoadModuleCondition = (url: string) => boolean;
 
 
-export type QueryParams = {[id: string]: QueryParam};
-export type QueryParam = string|boolean|Array<string|boolean>;
+export type QueryParams = { [id: string]: QueryParam };
+export type QueryParam = string | boolean | Array<string | boolean>;
 
 
 export interface Route {
@@ -22,14 +22,14 @@ export interface Route {
     canActivate?: any[];
     canDeactivate?: any[];
     outlet?: string;
-    loadModule?: LoadModuleCallback|string;
+    loadModule?: LoadModuleCallback | string;
     loadModuleCondition?: LoadModuleCondition;
 }
 
 
 export interface MatchedRouteResult {
     component: Type<any>;
-    params?: {[name: string]: string};
+    params?: { [name: string]: string };
     factoryResolver?: ComponentFactoryResolver;
     injector?: Injector;
     route: Route;
@@ -54,8 +54,9 @@ export interface NavigationExtras {
  * Make router component prerenderable
  */
 export interface IPrerenderRouterComponent {
-    routePrerender(): Promise<any>;
     fallbackTimeout?: number;
+
+    routePrerender(): Promise<any>;
 }
 
 
@@ -66,9 +67,9 @@ export enum ReuseRouteStrategy {
      * Create only one instance of route component and allways reuse them
      */
     STICKY = 1,
-        /**
-         * Reuse route component only when use return on the route by history pop event
-         */
+    /**
+     * Reuse route component only when use return on the route by history pop event
+     */
     CACHEBACK = 2
 }
 
@@ -82,6 +83,7 @@ export interface IReusableRouterComponent {
      * Component was detached from outlet and saved to cache for later reuse
      */
     onRouteCached?();
+
     /**
      * Component was attached to outlet
      */
