@@ -101,7 +101,7 @@ export class Router {
             url += `?${QueryStringParser.serialize(_combinedQueryParams)}`;
         }
 
-        if ((extras && !extras.force) && this.currentContext && url === this.currentContext.url) {
+        if (this.currentContext && url === this.currentContext.url && (!extras || !extras.force)) {
             // navigation within same url
             return Promise.resolve(true);
         }
