@@ -283,7 +283,7 @@ export class Router {
                 if (!isParamsEqual(this.queryParamsSnapshot, this.currentContext.queryParamsSnapshot)) {
                     this._queryParams.next(this.currentContext.queryParamsSnapshot);
                 }
-                this._events.next(new NavigationEnd(url, outlet.activatedComponent, this.currentContext));
+                this._events.next(new NavigationEnd(url, outlet.activatedComponent, this.currentContext, shouldReplaceUrl));
 
             })
             .catch((e) => {

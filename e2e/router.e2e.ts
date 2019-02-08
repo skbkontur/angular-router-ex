@@ -85,8 +85,24 @@ describe("Router", () => {
             expectPageTitle("Home page");
         });
 
-        it("should not create new history item when using router api with replaceUrl: true (navigateByUrl)", () => {
+        it("should report replaced url when using router api with replaceUrl: true", () => {
+            navigate("detail");
+            navigate("home");
+            scrollWindow(1000);
+            click("navigate-about-replace");
+            expectText("url-replace-message","old url replaced");
+        });
 
+        it("should report new url when using router api with no replaceUrl", () => {
+            navigate("detail");
+            navigate("home");
+            scrollWindow(1000);
+            click("navigate-about");
+            expectText("url-replace-message","new url");
+        });
+
+
+        it("should not create new history item when using router api with replaceUrl: true (navigateByUrl)", () => {
             navigate("sticky");
             navigate("home");
             scrollWindow(1000);
@@ -96,6 +112,10 @@ describe("Router", () => {
 
             expectPageTitle("Sticky page");
         });
+
+
+
+
 
     });
 

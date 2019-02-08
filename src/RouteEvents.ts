@@ -17,11 +17,13 @@ export class NavigationEnd implements NavigationEvent {
     private _url: string;
     private _component: ComponentRef<any>;
     private _routeCtx: RouteContext;
+    private _historyReplaced: boolean;
 
-    constructor(url: string, component: ComponentRef<any>, routeCtx: RouteContext) {
+    constructor(url: string, component: ComponentRef<any>, routeCtx: RouteContext, _historyReplaced?: boolean) {
         this._url = url;
         this._component = component;
         this._routeCtx = routeCtx;
+        this._historyReplaced = _historyReplaced;
     }
 
     get url(): string {
@@ -34,6 +36,10 @@ export class NavigationEnd implements NavigationEvent {
 
     get routeContext(): RouteContext {
         return this._routeCtx;
+    }
+
+    get historyReplaced(): boolean {
+        return this._historyReplaced;
     }
 
 }

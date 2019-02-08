@@ -54,6 +54,20 @@ describe("Router", () => {
             Helpers_1.navigateBack();
             Helpers_1.expectPageTitle("Home page");
         });
+        it("should report replaced url when using router api with replaceUrl: true", () => {
+            Helpers_1.navigate("detail");
+            Helpers_1.navigate("home");
+            Helpers_1.scrollWindow(1000);
+            Helpers_1.click("navigate-about-replace");
+            Helpers_1.expectText("url-replace-message", "old url replaced");
+        });
+        it("should report new url when using router api with no replaceUrl", () => {
+            Helpers_1.navigate("detail");
+            Helpers_1.navigate("home");
+            Helpers_1.scrollWindow(1000);
+            Helpers_1.click("navigate-about");
+            Helpers_1.expectText("url-replace-message", "new url");
+        });
         it("should not create new history item when using router api with replaceUrl: true (navigateByUrl)", () => {
             Helpers_1.navigate("sticky");
             Helpers_1.navigate("home");
