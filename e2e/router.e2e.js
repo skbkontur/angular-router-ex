@@ -549,8 +549,12 @@ describe("Router", () => {
             Helpers_1.click("navigate-qs-hash");
             Helpers_1.expectText("observable-query-params-json", "{\"search\":\"quest\"}");
         });
+        it("should scroll page on hash-navigation in current document", () => {
+            protractor_1.browser.get("/cacheback/1");
+            Helpers_1.click("navigate-hash-anchor");
+            expect(Helpers_1.getScrollPos()).toBeGreaterThan(0);
+        });
     });
-    //TODO: Base Href Tests ?
     describe("multiple outlets", () => {
         beforeEach(() => {
             protractor_1.browser.get("/multiple-outlets");

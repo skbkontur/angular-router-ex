@@ -9,10 +9,6 @@
 
   <meta name="description" content="<%= htmlWebpackPlugin.options.title %>">
 
-  <!-- base url -->
-  <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
-
-
 </head>
 
 <body>
@@ -25,6 +21,8 @@
   <!-- Webpack Dev Server reload -->
   <script src="/webpack-dev-server.js"></script>
   <% } %>
+
+  <%= htmlWebpackPlugin.files.webpackManifest %>
 
 
 </body>
