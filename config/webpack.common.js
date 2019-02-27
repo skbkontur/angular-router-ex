@@ -51,6 +51,10 @@ module.exports = function (options) {
             }
         },
 
+        output: {
+            publicPath: "/"
+        },
+
 
         module: {
 

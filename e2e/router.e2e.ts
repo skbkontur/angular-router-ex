@@ -753,10 +753,15 @@ describe("Router", () => {
             expectText("observable-query-params-json", "{\"search\":\"quest\"}");
         });
 
+        it("should scroll page on hash-navigation in current document", () => {
+            browser.get("/cacheback/1");
+            click("navigate-hash-anchor");
+            expect(getScrollPos()).toBeGreaterThan(0);
+        });
+
 
     });
 
-    //TODO: Base Href Tests ?
 
     describe("multiple outlets", () => {
         beforeEach(() => {
