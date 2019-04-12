@@ -24,7 +24,7 @@ export class HandleHrefNavigationDirective implements OnDestroy, OnInit {
 
         let elm = <HTMLElement>event.target;
         // traverse the DOM up to find first A tag
-        while (!elm.nodeName || elm.nodeName.toUpperCase() !== "A") {
+        while (!elm.nodeName || elm.nodeName.toUpperCase() !== "A" || elm.hasAttribute("href")) {
             // ignore rewriting if no A tag (reached root element, or no parent - removed from document)
             if (elm === document.body || !(elm = elm.parentElement)) return;
         }
