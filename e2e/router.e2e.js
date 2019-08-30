@@ -515,6 +515,7 @@ describe("Router", () => {
         it("should navigate within nested routes correctly", () => {
             protractor_1.browser.get("/");
             Helpers_1.navigate("detail");
+            protractor_1.browser.sleep(50);
             Helpers_1.click("extra-detail-link");
             Helpers_1.expectPageTitle("Detail extra page");
         });

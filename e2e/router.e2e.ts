@@ -703,6 +703,7 @@ describe("Router", () => {
         it("should navigate within nested routes correctly", () => {
             browser.get("/");
             navigate("detail");
+            browser.sleep(50);
             click("extra-detail-link");
             expectPageTitle("Detail extra page");
         });
