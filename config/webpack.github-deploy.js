@@ -1,78 +1,161 @@
 /**
  * @author: @AngularClass
  */
-const fs = require('fs');
-const path = require('path');
-const helpers = require('./helpers');
-const ghDeploy = require('./github-deploy');
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const ghpages = require('gh-pages');
 
+const helpers = require('./helpers');
+const webpackMerge = require('webpack-merge'); // used to merge webpack configs
+const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
+
+/**
+ * Webpack Plugins
+ */
+const DefinePlugin = require('webpack/lib/DefinePlugin');
 
 /**
  * Webpack Constants
  */
-const GIT_REMOTE_NAME = 'origin';
-const COMMIT_MESSAGE = 'Updates';
-const GH_REPO_NAME = ghDeploy.getRepoName(GIT_REMOTE_NAME);
+const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
+const HOST = process.env.HOST || 'localhost';
+const PORT = process.env.PORT || 3000;
+const HMR = helpers.hasProcessFlag('hot');
+const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
+    host: HOST,
+    port: PORT,
+    ENV: ENV,
+    HMR: HMR
+});
 
+/**
+ * Webpack configuration
+ *
+ * See: http://webpack.github.io/docs/configuration.html#cli
+ */
 module.exports = function (options) {
-  const webpackConfigFactory = ghDeploy.getWebpackConfigModule(options); // the settings that are common to prod and dev
-  const webpackConfig = webpackConfigFactory(options);
+    return webpackMerge(commonConfig({env: ENV}), {
 
-  // replace the instance of HtmlWebpackPlugin with an updated one.
-  ghDeploy.replaceHtmlWebpackPlugin(webpackConfig.plugins, GH_REPO_NAME);
+        /**
+         * Developer tool to enhance debugging
+         *
+         * See: http://webpack.github.io/docs/configuration.html#devtool
+         * See: https://github.com/webpack/docs/wiki/build-performance#sourcemaps
+         */
+        devtool: "cheap-module-source-map#inline-source-map",
 
-  return webpackMerge(webpackConfig, {
-   output: {
-     /**
-      * The public path is set to the REPO name.
-      *
-      * `HtmlElementsPlugin` will add it to all resources url's created by it.
-      * `HtmlWebpackPlugin` will add it to all webpack bundels/chunks.
-      *
-      * In theory publicPath shouldn't be used since the browser should automatically prefix the
-      * `baseUrl` into all URLs, however this is not the case when the URL is absolute (start with /)
-      *
-      * It's important to prefix & suffix the repo name with a slash (/).
-      * Prefixing so every resource will be absolute (otherwise it will be url.com/repoName/repoName...
-      * Suffixing since chunks will not do it automatically (testes against about page)
-      */
-     publicPath: '/' + GH_REPO_NAME + '/' + ghDeploy.safeUrl(webpackConfig.output.publicPath)
-   },
+        /**
+         * Options affecting the output of the compilation.
+         *
+         * See: http://webpack.github.io/docs/configuration.html#output
+         */
+        output: {
+            publicPath: "/angular-router-ex/",
+            /**
+             * The output directory as absolute path (required).
+             *
+             * See: http://webpack.github.io/docs/configuration.html#output-path
+             */
+            path: helpers.root('dist'),
 
-   plugins: [
-     function() {
-       this.plugin('done', function(stats) {
-         console.log('Starting deployment to GitHub.');
+            /**
+             * Specifies the name of each output file on disk.
+             * IMPORTANT: You must not specify an absolute path here!
+             *
+             * See: http://webpack.github.io/docs/configuration.html#output-filename
+             */
+            filename: '[name].bundle.js',
 
-         const logger = function (msg) {
-           console.log(msg);
-         };
+            /**
+             * The filename of the SourceMaps for the JavaScript files.
+             * They are inside the output.path directory.
+             *
+             * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
+             */
+            sourceMapFilename: '[file].map',
 
-         const options = {
-           logger: logger,
-           remote: GIT_REMOTE_NAME,
-           message: COMMIT_MESSAGE,
-           dotfiles: true // for .nojekyll
-         };
+            /** The filename of non-entry chunks as relative path
+             * inside the output.path directory.
+             *
+             * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
+             */
+            chunkFilename: '[id].chunk.js',
 
-         // Since GitHub moved to Jekyll 3.3, their server ignores the "node_modules" and "vendors" folder by default.
-         // but, as of now, it also ignores "vendors*" files.
-         // This means vendor.bundle.js or vendor.[chunk].bundle.js will return 404.
-         // this is the fix for now.
-         fs.writeFileSync(path.join(webpackConfig.output.path, '.nojekyll'), '');
+            library: 'ac_[name]',
+            libraryTarget: 'var'
 
-         ghpages.publish(webpackConfig.output.path, options, function(err) {
-           if (err) {
-             console.log('GitHub deployment done. STATUS: ERROR.');
-             throw err;
-           } else {
-             console.log('GitHub deployment done. STATUS: SUCCESS.');
-           }
-         });
-       });
-     }
-   ]
- });
-};
+        },
+
+        module: {
+
+            rules: [
+
+                /*
+                 * css loader support for *.css files (styles directory only)
+                 * Loads external css styles into the DOM, supports HMR
+                 *
+                 */
+                {
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader'],
+                    include: [helpers.root('sample', 'styles')]
+                },
+
+            ]
+
+        },
+
+        plugins: [
+
+            /**
+             * Plugin: DefinePlugin
+             * Description: Define free variables.
+             * Useful for having development builds with debug logging or adding global constants.
+             *
+             * Environment helpers
+             *
+             * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
+             */
+            // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
+            new DefinePlugin({
+                'ENV': JSON.stringify(METADATA.ENV),
+                'process.env': {
+                    'ENV': JSON.stringify(METADATA.ENV),
+                    'NODE_ENV': JSON.stringify(METADATA.ENV),
+                }
+            })
+
+        ],
+
+        /**
+         * Webpack Development Server configuration
+         * Description: The webpack-dev-server is a little node.js Express server.
+         * The server emits information about the compilation state to the client,
+         * which reacts to those events.
+         *
+         * See: https://webpack.github.io/docs/webpack-dev-server.html
+         */
+        devServer: {
+            port: METADATA.port,
+            host: METADATA.host,
+            historyApiFallback: true,
+            watchOptions: {
+                aggregateTimeout: 300,
+                poll: 1000
+            }
+        },
+
+        /*
+         * Include polyfills or mocks for various node stuff
+         * Description: Node configuration
+         *
+         * See: https://webpack.github.io/docs/configuration.html#node
+         */
+        node: {
+            global: true,
+            crypto: 'empty',
+            process: true,
+            module: false,
+            clearImmediate: false,
+            setImmediate: false
+        }
+
+    });
+}

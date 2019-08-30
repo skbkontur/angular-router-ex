@@ -40,14 +40,13 @@ npm-debug.log
 /coverage/
 
 # Dist #
-/dist
 /public/__build__/
 /src/*/__build__/
 /__build__/**
 /public/dist/
 /src/*/dist/
 /src/dist/
-/dist/**
+#/dist/**
 /.awcache
 dll/
 
