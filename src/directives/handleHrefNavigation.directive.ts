@@ -36,7 +36,7 @@ export class HandleHrefNavigationDirective implements OnDestroy, OnInit {
          ссылки, открывающиеся в новом окне,
          ссылки на внешние ресурсы, а также ссылки с url-scheme приложений и на внешние url, а также #-ссылки на текущий документ */
         if (navigateUrl &&
-            (elm.getAttribute("target") === "_blank" || /^\s*(javascript|mailto|tel|sip):/i.test(navigateUrl)) ||
+            (elm.getAttribute("target") === "_blank" || /^\s*(javascript|mailto|tel|sip|tg):/i.test(navigateUrl)) ||
               HandleHrefNavigationDirective.isExternalNavigation(navigateUrl) || navigateUrl[0] === '#') {
             return;
         }
