@@ -1,20 +1,20 @@
 {
   "detail": {
-    "js": "/0.chunk.js"
+    "js": "/angular-router-ex/0.chunk.js"
   },
   "main": {
-    "js": "/main.bundle.js"
+    "js": "/angular-router-ex/main.bundle.js"
   },
   "polyfills": {
-    "js": "/polyfills.bundle.js"
+    "js": "/angular-router-ex/polyfills.bundle.js"
   },
   "vendors~main": {
-    "js": "/3.chunk.js"
+    "js": "/angular-router-ex/3.chunk.js"
   },
   "vendors~polyfills": {
-    "js": "/4.chunk.js"
+    "js": "/angular-router-ex/4.chunk.js"
   },
   "": {
-    "html": "/index.html"
+    "html": "/angular-router-ex/index.html"
   }
 }
