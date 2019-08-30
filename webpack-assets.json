@@ -1,0 +1,20 @@
+{
+  "detail": {
+    "js": "/0.chunk.js"
+  },
+  "main": {
+    "js": "/main.bundle.js"
+  },
+  "polyfills": {
+    "js": "/polyfills.bundle.js"
+  },
+  "vendors~main": {
+    "js": "/3.chunk.js"
+  },
+  "vendors~polyfills": {
+    "js": "/4.chunk.js"
+  },
+  "": {
+    "html": "/index.html"
+  }
+}
