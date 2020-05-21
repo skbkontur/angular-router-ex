@@ -26,4 +26,7 @@ export {NavigationCancel, NavigationEnd, NavigationStart, NavigationEvent} from 
 export {RouteContext, Params} from "./RouteContext";
 export {RouterModuleFactory} from "./RouterModuleFactory";
 export {UrlParser} from "./UrlParser";
+export {QueryStringParser} from "./QueryStringParser";
+
+
 
