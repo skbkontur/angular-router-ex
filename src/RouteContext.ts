@@ -3,7 +3,7 @@ import {QueryParams, ResolvedRoute, Route} from "./Config";
 import {Injector} from "@angular/core";
 import {isParamsEqual} from "./IsParamsEqual";
 
-export type Params = { [key: string]: string };
+export type Params = { readonly [key: string]: string };
 
 export class RouteContext {
 

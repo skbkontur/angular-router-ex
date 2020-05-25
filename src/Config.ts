@@ -10,7 +10,7 @@ export type LoadModuleCallback = () => Promise<NgModuleFactory<any>>;
 export type LoadModuleCondition = (url: string) => boolean;
 
 
-export type QueryParams = { [id: string]: QueryParam };
+export type QueryParams = { readonly [id: string]: QueryParam };
 export type QueryParam = string | boolean | Array<string | boolean>;
 
 
@@ -29,7 +29,7 @@ export interface Route {
 
 export interface MatchedRouteResult {
     component: Type<any>;
-    params?: { [name: string]: string };
+    params?: { readonly [name: string]: string };
     factoryResolver?: ComponentFactoryResolver;
     injector?: Injector;
     route: Route;

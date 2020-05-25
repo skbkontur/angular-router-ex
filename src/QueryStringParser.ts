@@ -24,7 +24,7 @@ export class QueryStringParser {
     }
 
     static parse(rawQuery: string): QueryParams {
-        let params: QueryParams = {};
+        let params = {};
 
         if (!rawQuery) {
             return params;
